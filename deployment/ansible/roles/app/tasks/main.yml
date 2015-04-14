@@ -5,7 +5,7 @@
 
 - name: create application config file
   sudo: yes
-  template: src=farmer.conf.j2 dest=/var/www/farmer.conf.js
+  template: src=toolbelt.conf.j2 dest=/var/www/toolbelt.conf.js
 
 - name: append alias bash.rc to run command
   lineinfile:

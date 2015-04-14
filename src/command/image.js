@@ -1,5 +1,5 @@
 var request = require('request'),
-    config = require('../../farmer.conf');
+    config = require('../../toolbelt.conf.js');
 
 function ImageList(program) {
     var self = this;

@@ -1,5 +1,8 @@
 var request = require('request'),
-    config = require('../../farmer.conf');
+    shelljs = require('shelljs'),
+    Procfile = require('../procfile'),
+    Listener = require('../event-listenr'),
+    config = require('../../toolbelt.conf.js');
 
 function Create(program) {
     this.program = program;
@@ -10,13 +13,8 @@ Create.prototype.init = function () {
     var self = this;
 
     this.program
-        .command('create <name>')
-        .description('Create a staging container')
-        .option("-p, --package <package_name>", 'set package name')
-        .option("-r, --repo <repository_url>", 'set repository')
-        .option("-b, --branch <branch_name>", 'branch name')
-        .option("-c, --commit <commit_id>", 'commit id')
-        .option("-t, --tag <tag>", 'tag')
+        .command('create')
+        .description('Create a stage')
         .action(function (env, options) {
             self.action(env, options);
         });
@@ -24,35 +22,36 @@ Create.prototype.init = function () {
 
 Create.prototype.action = function(name, options) {
 
-    if (typeof options.repo === 'undefined') {
-        console.error('Option -r, --repo <repository_url> is required!');
-        process.exit(1);
-    }
+    var profile = new Procfile(shelljs.pwd() + '/procfile.yml');
 
-    var opt = {
+    profile.toJson().then(function (json) {
+
+        var opt = {
             uri: config.server_address + '/container/greenhouse/create',
             method: 'POST',
-            json: {
-                'name': name,
-                'repo': options.repo,
-                'package': options.package || 'base',
-                'branch': options.branch || 'master',
-                'commit': options.commit || null,
-                'tag': options.tag || null
-            }
+            json: json
         };
+        request(opt, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                // 200 – no error
+                setTimeout(function () {
+                    var listener = new Listener(config.station_server, body.id);
+                    console.log('listener');
+                    listener.connect()
+                        .then(function () {
+                            listener.listen();
+                        });
+                }, 1000);
 
-    request(opt, function (error, response, body) {
-        console.log(typeof body);
-        if (!error && response.statusCode == 200) {
-            // 200 – no error
-            console.log(body.result);
+            } else {
+                // 500 – server error
+                console.log('error: ', body.error);
+            }
 
-        } else {
-            // 500 – server error
-            console.log('error: ', body.error);
-        }
+        });
 
+    }, function (error) {
+        console.log('Invalid file content');
     });
 
 };

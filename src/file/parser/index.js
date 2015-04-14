@@ -2,24 +2,23 @@
 
 var mime       = require('mime'),
     YamlParser = require('./yaml'),
-    JsonParser = require('./json'),
-    Q          = require('q');
+    JsonParser = require('./json');
 
 function Parser() {
 }
 
-Parser.prototype.toJson = function (file, variables) {
+Parser.prototype.toJson = function (file) {
     var ext = mime.extension(mime.lookup(file));
 
     if (ext == 'yaml' || ext == 'yml') {
-        return YamlParser(file, variables);
+        return YamlParser(file);
     }
 
     if (ext == 'json') {
-        return JsonParser(file, variables);
+        return JsonParser(file);
     }
 
-    return Q.reject('Unknown file type');
+    return null;
 };
 
 module.exports = new Parser();
