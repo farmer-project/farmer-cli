@@ -10,7 +10,7 @@ function Inspect(program) {
 
 Inspect.prototype.action = function (id) {
     var options = {
-        uri: config.server_address + '/container/' + id,
+        uri: config.api + '/container/' + id,
         method: 'GET'
     };
 

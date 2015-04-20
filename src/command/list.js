@@ -28,7 +28,7 @@ List.prototype.init = function () {
 
 List.prototype.action = function (env) {
     var options = {
-            uri: config.server_address + 'container/' + this.type + '/list',
+            uri: config.api + 'container/' + this.type + '/list',
             method: 'GET'
         };
 

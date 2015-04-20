@@ -14,7 +14,7 @@ function ImageList(program) {
 
 ImageList.prototype.action = function () {
     var options = {
-        uri: config.server_address + '/images',
+        uri: config.api + '/images',
         method: 'GET'
     };
 

@@ -10,14 +10,17 @@
   "author": "Majid Golshadi <golshadi.majid@gmail.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "commander": "~2.6.0",
+    "js-yaml": "~3.2.7",
+    "log4js": "~0.6.22",
+    "mime": "~1.3.4",
+    "mustache": "~2.0.0",
+    "node-fs": "^0.1.7",
     "q": "~1.1.2",
     "request": "~2.53.0",
-    "log4js": "~0.6.22",
-    "commander": "~2.6.0",
+    "shelljs": "~0.4.0",
     "socket.io-client": "~1.3.5",
-    "js-yaml": "~3.2.7",
-    "mustache": "~2.0.0",
-    "mime": "~1.3.4",
-    "shelljs": "~0.4.0"
+    "ursa": "~0.8.4",
+    "username": "^1.0.0"
   }
 }

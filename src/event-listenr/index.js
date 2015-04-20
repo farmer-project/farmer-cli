@@ -5,14 +5,12 @@ var Q = require('q'),
 
 
 function Listener (stationServer, room) {
-    console.log('constructor');
     this.serverUrl = stationServer + '/' + room;
     this.socket = null;
-    console.log('this.socket', this.socket);
 }
 
 Listener.prototype.connect = function () {
-    this.socket = io.connect(this.serverUrl, {reconnect: true});
+    this.socket = io.connect(this.serverUrl, {'connect timeout': 1000});
 
     if (this.socket.connected) {
         return Q.when(true);
@@ -27,21 +25,21 @@ Listener.prototype.connect = function () {
         console.log('error', error);
     });
 
-    this.socket.on('reconnect', function () {
-        console.log('reconnect');
-    });
-
     return deferred.promise;
 };
 
-Listener.prototype.listen = function () {
-    console.log('>>>>>>>>>> listen');
-    this.socket.on('connect', function() {
-        console.log('>>>>>>>>>> listener connected');
+Listener.prototype.listen = function (callback) {
+    var self= this;
+    if (this.socket) {
         this.socket.on('event', function (data) {
-            console.log('>>>>>>>>>> client receive data', data);
+            // check if it's not end shack
+            if (data['end'] !== 'END_FLAG_UP') {
+                callback(data);
+            } else {
+                self.socket.disconnect();
+            }
         });
-    });
+    }
 };
 
 module.exports = Listener;
