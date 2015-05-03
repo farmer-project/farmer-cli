@@ -1,8 +1,9 @@
-var request = require('request'),
-    shelljs = require('shelljs'),
-    Procfile = require('../procfile'),
-    Listener = require('../event-listenr'),
-    config = require('../../toolbelt.conf.js');
+var shelljs     = require('shelljs'),
+    Farmerfile  = require('../file/farmerfile'),
+    Listener    = require('../event-listenr'),
+    agent       = require('../farmer-agent'),
+    path        = require('path'),
+    config      = require(path.resolve(__dirname, '../../toolbelt.conf.js'));
 
 function Create(program) {
     this.program = program;
@@ -21,49 +22,46 @@ Create.prototype.init = function () {
 };
 
 Create.prototype.action = function(name, options) {
+    var farmerfile = new Farmerfile(path.join(shelljs.pwd() ,config.farmer_file));
 
-    var profile = new Procfile(shelljs.pwd() + '/procfile.yml');
+    agent.createSeed(farmerfile.toJson()).then(function (resBody) {
+        var listener = new Listener(config.station_server, resBody.room),
+            subLevel = 0;
 
-    profile.toJson().then(function (json) {
+        listener.connect()
+            .then(function () {
+                listener.listen(function (receiveData) {
+                    if (receiveData['type'] === 'notify') {
+                        console.log('in type part', receiveData['type']);
+                        if (receiveData['tag'] === 'START_FLAG_UP')
+                            subLevel++;
+                        if (receiveData['tag'] === 'START_FLAG_DOWN')
+                            subLevel--;
 
-        var opt = {
-            uri: config.api + '/container/greenhouse/create',
-            method: 'POST',
-            json: json
-        };
+                        console.log('subLevel', subLevel);
+                    }
 
-        request(opt, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                // 200 – no error
-                var listener = new Listener(config.station_server, body.id),
-                    level = 0;
+                    if (subLevel < 0) {
+                        listener.disconnect();
+                    } else {
+                        console.log('receiveData', receiveData);
+                        if (receiveData['type'] === 'message') {
+                            var tab = '    ';
+                            for (var i=0; i<subLevel; i++) {
+                                tab += tab;
+                            }
+                            delete receiveData['type'];
+                            console.log(tab + ' * ' ,receiveData);
+                        }
 
-                listener.connect()
-                    .then(function () {
-                        listener.listen(function (receiveData) {
-                            var sub = (level == receiveData.level);
-                            level = receiveData.level;
-                            delete receiveData['level'];
+                        if (receiveData['type'] === 'file') {
 
-                            if (sub)
-                                console.log('---------' + JSON.stringify(receiveData));
-                            else
-                                console.log(receiveData);
-                        });
-                    });
+                        }
+                    }
+                });
+            });
 
-            } else {
-                // 500 – server error
-                if (body)
-                    console.log('error: ', body.error);
-                console.log('error: ', error);
-            }
-
-        });
-
-    }, function (error) {
-        console.log('Invalid file content');
-    });
+    }, console.log);
 
 };
 

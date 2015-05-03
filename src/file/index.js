@@ -1,8 +1,6 @@
 'use strict';
 
-var Q = require('q'),
-    fs = require('fs'),
-    nodefs = require('node-fs'),
+var fs = require('fs'),
     parser = require('./parser');
 
 function File(file) {
@@ -41,6 +39,8 @@ File.prototype._getUserHome = function () {
 File.prototype.setPath = function (path) {
     this.path = path;
     this._absolutePath = null;
+
+    return this;
 };
 
 File.prototype.getAbsolutePath = function () {

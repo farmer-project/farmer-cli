@@ -22,24 +22,22 @@ Listener.prototype.connect = function () {
     });
 
     this.socket.on('error', function (error) {
-        console.log('error', error);
+        console.log('error:', error);
     });
 
     return deferred.promise;
 };
 
 Listener.prototype.listen = function (callback) {
-    var self= this;
     if (this.socket) {
         this.socket.on('event', function (data) {
-            // check if it's not end shack
-            if (data['end'] !== 'END_FLAG_UP') {
-                callback(data);
-            } else {
-                self.socket.disconnect();
-            }
+            callback(data);
         });
     }
+};
+
+Listener.prototype.disconnect = function () {
+    this.socket.disconnect();
 };
 
 module.exports = Listener;
