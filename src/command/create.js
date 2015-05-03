@@ -1,8 +1,9 @@
 var shelljs     = require('shelljs'),
+    path        = require('path'),
+    terminal    = require('../console'),
     Farmerfile  = require('../file/farmerfile'),
     Listener    = require('../event-listenr'),
     agent       = require('../farmer-agent'),
-    path        = require('path'),
     config      = require(path.resolve(__dirname, '../../toolbelt.conf.js'));
 
 function Create(program) {
@@ -24,40 +25,14 @@ Create.prototype.init = function () {
 Create.prototype.action = function(name, options) {
     var farmerfile = new Farmerfile(path.join(shelljs.pwd() ,config.farmer_file));
 
-    agent.createSeed(farmerfile.toJson()).then(function (resBody) {
-        var listener = new Listener(config.station_server, resBody.room),
+    agent.createSeed(farmerfile.toJson()).then(function (res) {
+        var listener = new Listener(config.station_server, res.room),
             subLevel = 0;
 
         listener.connect()
             .then(function () {
                 listener.listen(function (receiveData) {
-                    if (receiveData['type'] === 'notify') {
-                        console.log('in type part', receiveData['type']);
-                        if (receiveData['tag'] === 'START_FLAG_UP')
-                            subLevel++;
-                        if (receiveData['tag'] === 'START_FLAG_DOWN')
-                            subLevel--;
-
-                        console.log('subLevel', subLevel);
-                    }
-
-                    if (subLevel < 0) {
-                        listener.disconnect();
-                    } else {
-                        console.log('receiveData', receiveData);
-                        if (receiveData['type'] === 'message') {
-                            var tab = '    ';
-                            for (var i=0; i<subLevel; i++) {
-                                tab += tab;
-                            }
-                            delete receiveData['type'];
-                            console.log(tab + ' * ' ,receiveData);
-                        }
-
-                        if (receiveData['type'] === 'file') {
-
-                        }
-                    }
+                    terminal.show(receiveData);
                 });
             });
 
