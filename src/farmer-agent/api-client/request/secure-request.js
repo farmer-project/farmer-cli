@@ -3,8 +3,8 @@
 var _       = require('lodash'),
     request = require('request'),
     AES     = require('./crypto/aes'),
-    File    = require('../file'),
-    config  = require(require('path').resolve(__dirname, '../../toolbelt.conf'));
+    File    = require('../../../file'),
+    config  = require('../../../../toolbelt.conf');
 
 function SecureRequest () {
     this.aes = new AES();
@@ -31,7 +31,6 @@ SecureRequest.prototype.send = function (opt, callback) {
     //            username: config.username,
     //            data: encryptData
     //        };
-
             request(opt, self._receive);
         //});
     //}
@@ -48,7 +47,7 @@ SecureRequest.prototype._receive = function (error, response, body) {
     try {
         console.log('error', error);
         console.log('body', body);
-        this.callback(error, response, this.aes.decrypt(body));
+        this.callback(error, response, /*this.aes.decrypt(*/body/*)*/);
     } catch (e) {
         console.log('error', e);
     }

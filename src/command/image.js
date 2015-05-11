@@ -1,5 +1,7 @@
+'use strict';
+
 var request = require('request'),
-    config = require('../../toolbelt.conf.js');
+    config  = require('../../toolbelt.conf.js');
 
 function ImageList(program) {
     var self = this;
@@ -12,6 +14,9 @@ function ImageList(program) {
         });
 }
 
+/**
+ * Initialize Commander object for Images command
+ */
 ImageList.prototype.action = function () {
     var options = {
         uri: config.api + '/images',

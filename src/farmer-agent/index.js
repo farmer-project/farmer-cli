@@ -7,12 +7,11 @@ var createAction    = require('./api-client/actions/CreateAction'),
 function Agent () {
 }
 
-Agent.prototype.createSeed = function (farmerfile) {
-
+Agent.prototype.createSeed = function (data) {
     return createAction
-        .setData(dataResolver.createSeed(farmerfile))
+        .setData(dataResolver.createSeed(data))
         .executeOn({
-            api: config.station_server
+            api: config.API
         });
 };
 

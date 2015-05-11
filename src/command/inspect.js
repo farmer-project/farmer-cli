@@ -1,5 +1,7 @@
+'use strict';
+
 var request = require('request'),
-    config = require('../../toolbelt.conf.js');
+    config  = require('../../toolbelt.conf.js');
 
 function Inspect(program) {
     program
@@ -8,9 +10,12 @@ function Inspect(program) {
         .action(this.action);
 }
 
+/**
+ * Initialize Commander object for Inspect command
+ */
 Inspect.prototype.action = function (id) {
     var options = {
-        uri: config.api + '/container/' + id,
+        uri: config.API + '/container/' + id,
         method: 'GET'
     };
 

@@ -6,7 +6,7 @@ var Q    = require('q'),
 
 function Farmerfile (address) {
     this.farmerfile = new File(address);
-    this.validFiles = ['yml', 'yaml'];
+    this.includeFiles = ['.yml', '.yaml'];
 }
 
 Farmerfile.prototype.toJson = function () {
@@ -17,14 +17,19 @@ Farmerfile.prototype.toJson = function () {
     var recurse = function (obj) {
         for (var p in obj) {
             if (typeof obj[p] !== 'object') {
-                if (self.validFiles.indexOf(path.extname(obj[p]))) {
+                var extension = path.extname(obj[p]);
+
+                // Defined file will be include
+                if (self.includeFiles.indexOf(extension) > -1) {
                     var fileAddress = obj[p],
                         rootDir = path.dirname(self.farmerfile);
+                    // set file path
                     file.setPath(path.resolve(rootDir, fileAddress));
 
-                    // include file json data instead of it's file address
+                    // File json replaced with it's address
                     obj[p] = file.toJson();
                 }
+            // it's not an object
             } else {
                 recurse(obj[p]);
             }

@@ -4,7 +4,7 @@ var Q       = require('q'),
     request = require('request'),
     ursa    = require('ursa'),
     NodeCryptojs = require('node-cryptojs-aes'),
-    config  = require(require('path').resolve(__dirname, '../../../toolbelt.conf'));
+    config  = require('../../../../../toolbelt.conf');
 
 function AES() {
 

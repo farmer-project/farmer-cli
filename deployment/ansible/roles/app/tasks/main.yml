@@ -10,7 +10,7 @@
 - name: append alias bash.rc to run command
   lineinfile:
     dest=/home/vagrant/.bashrc
-    line="alias farmer-cli='node /var/www/src/farmer-cli.js'"
+    line="alias farmer='node /var/www/src/farmer-cli.js'"
     state=present
     insertafter=EOF
     create=True

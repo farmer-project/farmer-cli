@@ -1,14 +1,17 @@
 'use strict';
 
-var Q = require('q'),
-    io = require('socket.io-client');
-
+var Q   = require('q'),
+    io  = require('socket.io-client');
 
 function Listener (stationServer, room) {
     this.serverUrl = stationServer + '/' + room;
     this.socket = null;
 }
 
+/**
+ * Try to connect to station
+ * @returns {*}
+ */
 Listener.prototype.connect = function () {
     this.socket = io.connect(this.serverUrl, {'connect timeout': 1000});
 
@@ -28,6 +31,10 @@ Listener.prototype.connect = function () {
     return deferred.promise;
 };
 
+/**
+ * Listen on station event
+ * @param {function} callback - callback function that run with received data
+ */
 Listener.prototype.listen = function (callback) {
     if (this.socket) {
         this.socket.on('event', function (data) {
@@ -36,6 +43,9 @@ Listener.prototype.listen = function (callback) {
     }
 };
 
+/**
+ * Disconnect from station server
+ */
 Listener.prototype.disconnect = function () {
     this.socket.disconnect();
 };
