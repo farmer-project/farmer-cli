@@ -1,35 +1,39 @@
 'use strict';
 
-var request = require('request'),
-    config  = require('../../toolbelt.conf.js');
+var Listener = require('../event-listenr'),
+    Terminal = require('../terminal'),
+    agent    = require('../farmer-agent'),
+    config   = require('../../toolbelt.conf.js');
 
 function Inspect(program) {
     program
-        .command('inspect <id>')
-        .description('Get container information by container id')
+        .command('inspect <hostname>')
+        .description('Get package information')
         .action(this.action);
 }
 
 /**
  * Initialize Commander object for Inspect command
  */
-Inspect.prototype.action = function (id) {
-    var options = {
-        uri: config.API + '/container/' + id,
-        method: 'GET'
+Inspect.prototype.action = function (hostname, options) {
+    var data = {
+        args: {
+            hostname: hostname
+        }
     };
 
-    request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // 200 – no error
-            console.log(JSON.parse(body).result);
+    agent.inspect(data).then(function (res) {
+        var listener = new Listener(config.STATION_SERVER, res.room),
+            terminal = new Terminal();
 
-        } else {
-            // 500 – server error
-            console.log('Request error', error);
-            console.log('error: ', JSON.parse(body).error);
-        }
-    });
+        listener.connect()
+            .then(function () {
+                listener.listen(function (receiveData) {
+                    terminal.show(receiveData);
+                });
+            });
+
+    }, console.log);
 };
 
 module.exports = function (program) {

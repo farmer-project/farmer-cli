@@ -5,7 +5,10 @@ function DataResolver() {
 }
 
 DataResolver.prototype.createSeed = function (data) {
-    data['farmerfile']['shell'] = data['farmerfile']['shell']['create'];
+    if (data['farmerfile']['shell']) {
+        data['farmerfile']['shell'] = data['farmerfile']['shell']['create'];
+    }
+
     return data;
 };
 

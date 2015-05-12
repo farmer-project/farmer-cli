@@ -34,7 +34,7 @@ Create.prototype.init = function () {
 /**
  * Create command action definition
  * @param {string} hostname - First command value without tag
- * @param {Object} options - Second command value without tag
+ * @param {Object} options - Commander options object
  */
 Create.prototype.action = function(hostname, options) {
     var fileUri = path.join(shelljs.pwd(), config.FARMER_FILE),
@@ -53,6 +53,8 @@ Create.prototype.action = function(hostname, options) {
         listener.connect()
             .then(function () {
                 listener.listen(function (receiveData) {
+                    // TODO: terminal not show recived data correctly
+                    console.log(receiveData);
                     terminal.show(receiveData);
                 });
             });

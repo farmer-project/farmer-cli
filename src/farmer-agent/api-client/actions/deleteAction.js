@@ -7,16 +7,16 @@ var Q             = require('q'),
 /**
  * @constructor
  */
-function CreateAction () {
+function DeleteAction () {
     this.data = null;
 }
 
 /**
  * Set send data
  * @param {Object|string} data - Data to be send
- * @returns {CreateAction}
+ * @returns {DeleteAction}
  */
-CreateAction.prototype.setData = function (data) {
+DeleteAction.prototype.setData = function (data) {
     this.data = data;
 
     return this;
@@ -27,16 +27,15 @@ CreateAction.prototype.setData = function (data) {
  * @param {Object} server - farmer server specification
  * @returns {*|promise}
  */
-CreateAction.prototype.executeOn = function (server) {
+DeleteAction.prototype.executeOn = function (server) {
     var deferred = Q.defer(),
         secureReq = new SecureRequest(),
         opt = {
-            uri: url.resolve(server.api, '/api/container/greenhouse/create'),
+            uri: url.resolve(server.api, '/api/container/greenhouse/delete'),
             method: 'POST',
             json: this.data
         };
 
-    console.log('>>>>>>>>>>>>>>', require('util').inspect(this.data, false, null));
     secureReq.send(opt, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             deferred.resolve(body);
@@ -52,4 +51,4 @@ CreateAction.prototype.executeOn = function (server) {
     return deferred.promise;
 };
 
-module.exports = new CreateAction();
+module.exports = new DeleteAction();

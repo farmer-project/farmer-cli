@@ -20,7 +20,7 @@ SecureRequest.prototype.send = function (opt, callback) {
     this.callback = callback;
     var self = this,
         file = new File();
-
+    console.log('>>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
     //if (!opt['json']) {
     //    throw new Error('data is empty; secure request is not require');
     //} else {

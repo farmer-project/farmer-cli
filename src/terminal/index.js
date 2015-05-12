@@ -9,6 +9,7 @@ function Terminal() {
  * @param {Object|string} data
  */
 Terminal.prototype.show = function (data) {
+    console.log('data>>', data);
     if (data['type'] === 'notify') {
         if (data['tag'] === 'START_FLAG_UP') { this.subLevel++; }
         if (data['tag'] === 'START_FLAG_DOWN') { this.subLevel--; }
