@@ -29,7 +29,9 @@ Inspect.prototype.action = function (hostname, options) {
         listener.connect()
             .then(function () {
                 listener.listen(function (receiveData) {
-                    terminal.show(receiveData);
+                    if (!terminal.show(receiveData)) {
+                        listener.disconnect();
+                    }
                 });
             });
 

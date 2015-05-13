@@ -35,7 +35,7 @@ Delete.prototype.action = function(hostname, options) {
     var data = {
             args: {
                 hostname: hostname,
-                deleteVolume: true && !options.keepVolumes
+                deleteVolume: !options.keepVolumes
             }
         };
 
@@ -46,7 +46,9 @@ Delete.prototype.action = function(hostname, options) {
         listener.connect()
             .then(function () {
                 listener.listen(function (receiveData) {
-                    terminal.show(receiveData);
+                    if (!terminal.show(receiveData)) {
+                        listener.disconnect();
+                    }
                 });
             });
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var _       = require('lodash'),
+    Q       = require('q'),
     request = require('request'),
     AES     = require('./crypto/aes'),
     File    = require('../../../file'),
@@ -8,19 +9,17 @@ var _       = require('lodash'),
 
 function SecureRequest () {
     this.aes = new AES();
-    this.callback = function () {};
 }
 
 /**
  *
- * @param opt 'request' npm package options
- * @param callback function
+ * @param {Object} opt - Request options
+ * @param {Function} callback - Callback function with three variable 'error', 'response' and 'body'
  */
 SecureRequest.prototype.send = function (opt, callback) {
-    this.callback = callback;
     var self = this,
         file = new File();
-    console.log('>>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
+
     //if (!opt['json']) {
     //    throw new Error('data is empty; secure request is not require');
     //} else {
@@ -31,26 +30,30 @@ SecureRequest.prototype.send = function (opt, callback) {
     //            username: config.username,
     //            data: encryptData
     //        };
-            request(opt, self._receive);
+    console.log('opt request >>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
+
+    self.request(opt).spread(callback);
         //});
     //}
 };
 
 /**
- *
- * @param error 'request' npm error
- * @param response 'request' npm response
- * @param body 'request' npm response body
- * @private
+ * Send request and return decrypted data
+ * @param {Object} option - Request options
+ * @returns {*|promise}
  */
-SecureRequest.prototype._receive = function (error, response, body) {
-    try {
-        console.log('error', error);
-        console.log('body', body);
-        this.callback(error, response, /*this.aes.decrypt(*/body/*)*/);
-    } catch (e) {
-        console.log('error', e);
-    }
+SecureRequest.prototype.request = function (option) {
+    var deferred = Q.defer();
+
+    request(option, function(error, response, body) {
+        try {
+            deferred.resolve([error, response, body]);//this.aes.decrypt
+        } catch (e) {
+            deferred.reject(e);
+        }
+    });
+
+    return deferred.promise;
 };
 
 module.exports = SecureRequest;

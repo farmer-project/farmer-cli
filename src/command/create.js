@@ -24,7 +24,7 @@ Create.prototype.init = function () {
     var self = this;
 
     this.program
-        .command('create [hostname]')
+        .command('create <hostname>')
         .description('Create a stage')
         .action(function (env, options) {
             self.action(env, options);
@@ -53,9 +53,9 @@ Create.prototype.action = function(hostname, options) {
         listener.connect()
             .then(function () {
                 listener.listen(function (receiveData) {
-                    // TODO: terminal not show recived data correctly
-                    console.log(receiveData);
-                    terminal.show(receiveData);
+                    if (!terminal.show(receiveData)) {
+                        listener.disconnect();
+                    }
                 });
             });
 

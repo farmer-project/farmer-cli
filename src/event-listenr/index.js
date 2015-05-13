@@ -25,7 +25,8 @@ Listener.prototype.connect = function () {
     });
 
     this.socket.on('error', function (error) {
-        console.log('error:', error);
+        console.log('listen error:', error);
+        deferred.reject(error);
     });
 
     return deferred.promise;
