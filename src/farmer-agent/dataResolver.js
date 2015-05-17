@@ -12,4 +12,12 @@ DataResolver.prototype.createSeed = function (data) {
     return data;
 };
 
+DataResolver.prototype.deploySeed = function (data) {
+    if (data['farmerfile']['shell']) {
+        data['farmerfile']['shell'] = data['farmerfile']['shell']['deploy'];
+    }
+
+    return data;
+};
+
 module.exports = new DataResolver();

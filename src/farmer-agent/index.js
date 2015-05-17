@@ -1,10 +1,11 @@
 'use strict';
 
 var createAction    = require('./api-client/actions/createAction'),
+    deployAction    = require('./api-client/actions/deployAction'),
     deleteAction    = require('./api-client/actions/deleteAction'),
     inspectAction   = require('./api-client/actions/inspectAction'),
     dataResolver    = require('./dataResolver'),
-    config          =   require('../../toolbelt.conf');
+    config          = require('../../toolbelt.conf');
 
 function Agent () {
 }
@@ -33,8 +34,12 @@ Agent.prototype.inspect = function (data) {
         });
 };
 
-Agent.prototype.deploySeed = function (farmerfile) {
-
+Agent.prototype.deploySeed = function (data) {
+    return deployAction
+        .setData(dataResolver.deploySeed(data))
+        .executeOn({
+            api: config.API
+        });
 };
 
 Agent.prototype.destroySeed = function (farmerfile) {
