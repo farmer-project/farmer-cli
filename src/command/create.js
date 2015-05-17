@@ -1,6 +1,7 @@
 'use strict';
 
-var shelljs     = require('shelljs'),
+var Q           = require('q'),
+    shelljs     = require('shelljs'),
     path        = require('path'),
     Terminal    = require('../terminal'),
     Farmerfile  = require('../file/farmerfile'),

@@ -1,6 +1,7 @@
 'use strict';
 
-var request = require('request'),
+var Q       = require('q'),
+    request = require('request'),
     config  = require('../../toolbelt.conf.js');
 
 function ImageList(program) {

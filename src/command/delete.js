@@ -1,6 +1,7 @@
 'use strict';
 
-var Terminal    = require('../terminal'),
+var Q           = require('q'),
+    Terminal    = require('../terminal'),
     Listener    = require('../event-listenr'),
     agent       = require('../farmer-agent');
 

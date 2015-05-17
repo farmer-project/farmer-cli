@@ -27,12 +27,9 @@ Listener.prototype.connect = function () {
         connection = amqp.createConnection(this.connectionOpt, {reconnect: true});
 
     connection.on('ready', function () {
-        console.log('connection is ready');
         self.connection = connection;
         self.connection.queue(self.roomID,
             {passive: true, durable:true}, function (queue) {
-                queue.bind(self.roomID);
-                console.log('connection to queue is ok');
                 self.queue = queue;
                 deferred.resolve(self.roomID);
         });
@@ -56,7 +53,6 @@ Listener.prototype.listen = function (callback) {
 
     var self = this;
     this.queue.subscribe({ack: true}, function (data) {
-        console.log('go to listening');
         callback(data);
         self.queue.shift();
     }).addCallback(function (ok) {
