@@ -30,7 +30,9 @@ SecureRequest.prototype.send = function (opt, callback) {
     //            username: config.username,
     //            data: encryptData
     //        };
-    console.log('opt request >>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
+    //console.log('request >>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
+    //console.log('--------------------------------');
+    //console.log();
 
     self.request(opt).spread(callback);
         //});

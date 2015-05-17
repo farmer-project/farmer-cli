@@ -1,11 +1,20 @@
 'use strict';
 
-var Q   = require('q'),
-    io  = require('socket.io-client');
+var Q    = require('q'),
+    amqp = require('amqp');
 
-function Listener (stationServer, room) {
-    this.serverUrl = stationServer + '/' + room;
-    this.socket = null;
+/**
+ * Create a rabbitmq subscriber
+ * @param {Object} connectionOpt - Rabbitmq client config
+ * @param {string} room - Room identifier
+ * @constructor
+ */
+function Listener (connectionOpt, room) {
+    this.connectionOpt = connectionOpt;
+    this.roomID = room;
+    this.queue = null;
+    this.connection = null;
+    this.consumerTag = null;
 }
 
 /**
@@ -13,20 +22,24 @@ function Listener (stationServer, room) {
  * @returns {*}
  */
 Listener.prototype.connect = function () {
-    this.socket = io.connect(this.serverUrl, {'connect timeout': 1000});
+    var self = this,
+        deferred = Q.defer(),
+        connection = amqp.createConnection(this.connectionOpt, {reconnect: true});
 
-    if (this.socket.connected) {
-        return Q.when(true);
-    }
-
-    var deferred = Q.defer();
-    this.socket.on('connect', function () {
-        deferred.resolve()
+    connection.on('ready', function () {
+        console.log('connection is ready');
+        self.connection = connection;
+        self.connection.queue(self.roomID,
+            {passive: true, durable:true}, function (queue) {
+                queue.bind(self.roomID);
+                console.log('connection to queue is ok');
+                self.queue = queue;
+                deferred.resolve(self.roomID);
+        });
     });
 
-    this.socket.on('error', function (error) {
-        console.log('listen error:', error);
-        deferred.reject(error);
+    connection.on('close', function () {
+        deferred.reject();
     });
 
     return deferred.promise;
@@ -37,18 +50,27 @@ Listener.prototype.connect = function () {
  * @param {function} callback - callback function that run with received data
  */
 Listener.prototype.listen = function (callback) {
-    if (this.socket) {
-        this.socket.on('event', function (data) {
-            callback(data);
-        });
+    if (!this.connection) {
+        throw new Error('connection lost');
     }
+
+    var self = this;
+    this.queue.subscribe({ack: true}, function (data) {
+        console.log('go to listening');
+        callback(data);
+        self.queue.shift();
+    }).addCallback(function (ok) {
+        self.consumerTag = ok.consumerTag;
+    });
 };
 
 /**
  * Disconnect from station server
  */
 Listener.prototype.disconnect = function () {
-    this.socket.disconnect();
+    this.queue.unsubscribe(this.consumerTag);
+    this.queue.destroy();
+    this.connection.disconnect();
 };
 
 module.exports = Listener;

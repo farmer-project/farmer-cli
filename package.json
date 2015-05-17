@@ -10,6 +10,7 @@
   "author": "Majid Golshadi <golshadi.majid@gmail.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "amqp": "^0.2.4",
     "commander": "~2.6.0",
     "js-yaml": "~3.2.7",
     "lodash": "^3.7.0",

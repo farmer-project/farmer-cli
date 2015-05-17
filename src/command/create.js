@@ -50,16 +50,21 @@ Create.prototype.action = function(hostname, options) {
         var listener = new Listener(config.STATION_SERVER, res.room),
             terminal = new Terminal();
 
-        listener.connect()
+        return listener.connect()
             .then(function () {
+                var deferred = Q.defer();
                 listener.listen(function (receiveData) {
                     if (!terminal.show(receiveData)) {
                         listener.disconnect();
+                        return deferred.resolve(true);
                     }
                 });
+                return deferred.promise;
             });
 
-    }, console.log);
+    }, console.log).then(function () {
+        process.exit(1);
+    });
 };
 
 module.exports = function (program) {
