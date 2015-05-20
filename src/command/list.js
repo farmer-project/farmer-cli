@@ -1,5 +1,10 @@
-var request = require('request'),
-    config  = require('../config');
+'use strict';
+
+var Q        = require('q'),
+    Listener = require('../event-listenr'),
+    Terminal = require('../terminal'),
+    agent    = require('../farmer-agent'),
+    config   = require('../config');
 
 function List(program) {
     this.validTypes = ['production', 'staging'];
@@ -9,54 +14,35 @@ function List(program) {
     this.init();
 }
 
+/**
+ * Initialize Commander object for inspect command
+ */
 List.prototype.init = function () {
     var self = this;
 
     this.program
         .command('list')
         .description('Get containers list')
-        .option(
-            "-t, --type [type]", "set container type [production, staging]",
-            function (type) {
-                self.setType(type);
-            }
-        )
-        .action(function (env) {
-            self.action(env);
+        .action(function (env, options) {
+            self.action(env, options);
         });
 };
 
-List.prototype.action = function (env) {
-    var options = {
-            uri: config.api + 'container/' + this.type + '/list',
-            method: 'GET'
-        };
-
-    request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // 200 – no error
-            console.log(JSON.parse(body).result);
-
-        } else {
-            // 500 – server error
-            console.log('request error', error);
-            console.log('error: ', JSON.parse(body).error);
-        }
+/**
+ * Inspect command action definition
+ * @param {string} env - First command value without tag
+ * @param {Object} options - Commander options object
+ */
+List.prototype.action = function (env, options) {
+    agent.list().then(function (res) {
+        var hostnames = JSON.parse((JSON.parse(res)).result);
+        hostnames.forEach(function (host) {
+            console.log(host.hostname);
+        });
+    }, console.log).finally(function () {
+        process.exit(1);
     });
 };
-
-List.prototype.setType = function (type) {
-    if(this.validTypes.indexOf(type) > -1) {
-        this.type = type;
-    } else {
-        console.log('');
-        console.log('Type must be "staging" or "production"');
-        console.log('');
-
-        process.exit(1);
-    }
-};
-
 
 module.exports = function (program) {
     return new List(program);

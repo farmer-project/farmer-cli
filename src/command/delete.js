@@ -21,7 +21,7 @@ Delete.prototype.init = function () {
     var self = this;
 
     this.program
-        .command('delete')
+        .command('delete <hostname>')
         .option('-k, --keep-volumes [keepVolumes]', 'keep package volumes')
         .description('Delete package')
         .action(function (env, options) {
