@@ -24,7 +24,9 @@ Delete.prototype.init = function () {
         .command('delete')
         .option('-k, --keep-volumes [keepVolumes]', 'keep package volumes')
         .description('Delete package')
-        .action(self.action);
+        .action(function (env, options) {
+            self.action(env, options);
+        });
 };
 
 /**

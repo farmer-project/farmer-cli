@@ -7,14 +7,28 @@ var Q        = require('q'),
     config   = require('../../toolbelt.conf.js');
 
 function Inspect(program) {
-    program
-        .command('inspect <hostname>')
-        .description('Get package information')
-        .action(this.action);
+    this.program = program;
+    this.init();
 }
 
 /**
- * Initialize Commander object for Inspect command
+ * Initialize Commander object for inspect command
+ */
+Inspect.prototype.init = function () {
+    var self = this;
+
+    this.program
+        .command('inspect <hostname>')
+        .description('Get package information')
+        .action(function (env, options) {
+            self.action(env, options);
+        });
+};
+
+/**
+ * Inspect command action definition
+ * @param {string} hostname - First command value without tag
+ * @param {Object} options - Commander options object
  */
 Inspect.prototype.action = function (hostname, options) {
     var data = {
@@ -39,7 +53,7 @@ Inspect.prototype.action = function (hostname, options) {
                 return deferred.promise;
             });
 
-    }, console.log).then(function () {
+    }, console.log).finally(function () {
         process.exit(1);
     });
 };

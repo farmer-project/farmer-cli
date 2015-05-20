@@ -1,5 +1,7 @@
 'use strict';
 
+var util = require('util');
+
 function Terminal() {
     this.subLevel = 1;
 }
@@ -23,7 +25,7 @@ Terminal.prototype.show = function (data) {
             }
 
             delete data['type'];
-            console.log(tab + '* ', data['data']);
+            console.log(tab + '*', util.inspect(data['data'], false, null));
         }
     }
 

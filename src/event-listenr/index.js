@@ -35,8 +35,9 @@ Listener.prototype.connect = function () {
         });
     });
 
-    connection.on('close', function () {
-        deferred.reject();
+    connection.on('error', function (err) {
+        console.log('station connection error', err);
+        deferred.reject(err);
     });
 
     return deferred.promise;
