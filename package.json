@@ -1,6 +1,6 @@
 {
   "name": "farmer-cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Farmer API client (desktop tool)",
   "main": "src/farmer-cli.js",
   "scripts": {
@@ -19,15 +19,12 @@
     "lodash": "^3.7.0",
     "log4js": "~0.6.22",
     "mime": "~1.3.4",
-    "mustache": "~2.0.0",
     "node-cryptojs-aes": "^0.4.0",
     "node-fs": "^0.1.7",
     "prompt": "^0.2.14",
     "q": "~1.1.2",
     "request": "~2.53.0",
     "shelljs": "~0.4.0",
-    "socket.io-client": "~1.3.5",
-    "ursa": "~0.8.4",
     "username": "^1.0.0"
   }
 }

@@ -3,12 +3,10 @@
 var _       = require('lodash'),
     Q       = require('q'),
     request = require('request'),
-    AES     = require('./crypto/aes'),
     File    = require('../../../file'),
     config  = require('../../../config');
 
 function SecureRequest () {
-    this.aes = new AES();
 }
 
 /**
@@ -17,26 +15,7 @@ function SecureRequest () {
  * @param {Function} callback - Callback function with three variable 'error', 'response' and 'body'
  */
 SecureRequest.prototype.send = function (opt, callback) {
-    var self = this,
-        file = new File();
-
-    //if (!opt['json']) {
-    //    throw new Error('data is empty; secure request is not require');
-    //} else {
-    //    self.aes.newKey(config.username, file.setPath(config.private_key).readSync()).then(function (key) {
-    //        console.log('key >>>>', key);
-    //        var encryptData = self.aes.encrypt(JSON.stringify(opt.json), key);
-    //        opt['json'] = {
-    //            username: config.username,
-    //            data: encryptData
-    //        };
-    //console.log('request >>>>>>>>>>>>>>', require('util').inspect(opt, false, null));
-    //console.log('--------------------------------');
-    //console.log();
-
-    self.request(opt).spread(callback);
-        //});
-    //}
+    this.request(opt).spread(callback);
 };
 
 /**
