@@ -1,6 +1,6 @@
 {
   "name": "farmer-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Farmer API client (desktop tool)",
   "main": "src/farmer-cli.js",
   "scripts": {

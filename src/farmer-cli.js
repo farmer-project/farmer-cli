@@ -5,6 +5,7 @@ var program = require('commander').version('0.0.1');
 require('./command/inspect')(program);
 //require('./command/image')(program);
 require('./command/create')(program);
+require('./command/deploy')(program);
 require('./command/delete')(program);
 //require('./command/update')(program);
 
