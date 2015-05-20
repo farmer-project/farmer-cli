@@ -8,6 +8,8 @@ require('./command/create')(program);
 require('./command/delete')(program);
 //require('./command/update')(program);
 
+require('./command/reconfigure')(program);
+
 program.parse(process.argv);
 
 if (!program.args.length) {

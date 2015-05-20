@@ -4,7 +4,7 @@ var Q        = require('q'),
     Listener = require('../event-listenr'),
     Terminal = require('../terminal'),
     agent    = require('../farmer-agent'),
-    config   = require('../../toolbelt.conf.js');
+    config   = require('../config');
 
 function Inspect(program) {
     this.program = program;

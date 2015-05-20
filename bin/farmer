@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'farmer';
+
+var path = require('path'),
+    File = require('../src/file'),
+    configFile = new File('~/.farmer.config.json');
+
+if (!configFile.isExist()) {
+    console.log('Farmer Client initialization:');
+    require(path.resolve(__dirname, '../src/reconfigure'))();
+} else {
+    require(path.resolve(__dirname, '../src/farmer-cli'));
+}

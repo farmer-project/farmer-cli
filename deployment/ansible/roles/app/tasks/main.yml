@@ -2,15 +2,3 @@
 - name: Install npm dependencies
   sudo: yes
   npm: path=/var/www
-
-- name: create application config file
-  sudo: yes
-  template: src=toolbelt.conf.j2 dest=/var/www/toolbelt.conf.js
-
-- name: append alias bash.rc to run command
-  lineinfile:
-    dest=/home/vagrant/.bashrc
-    line="alias farmer='node /var/www/src/farmer-cli.js'"
-    state=present
-    insertafter=EOF
-    create=True

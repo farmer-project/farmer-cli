@@ -5,7 +5,7 @@ var createAction    = require('./api-client/actions/createAction'),
     deleteAction    = require('./api-client/actions/deleteAction'),
     inspectAction   = require('./api-client/actions/inspectAction'),
     dataResolver    = require('./dataResolver'),
-    config          = require('../../toolbelt.conf');
+    config          = require('../config');
 
 function Agent () {
 }

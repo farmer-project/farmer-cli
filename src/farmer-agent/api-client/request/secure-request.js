@@ -5,7 +5,7 @@ var _       = require('lodash'),
     request = require('request'),
     AES     = require('./crypto/aes'),
     File    = require('../../../file'),
-    config  = require('../../../../toolbelt.conf');
+    config  = require('../../../config');
 
 function SecureRequest () {
     this.aes = new AES();

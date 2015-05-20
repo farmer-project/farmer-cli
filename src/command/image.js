@@ -2,7 +2,7 @@
 
 var Q       = require('q'),
     request = require('request'),
-    config  = require('../../toolbelt.conf.js');
+    config  = require('../config');
 
 function ImageList(program) {
     var self = this;

@@ -1,5 +1,5 @@
 var request = require('request'),
-    config  = require('../../toolbelt.conf.js');
+    config  = require('../config');
 
 function List(program) {
     this.validTypes = ['production', 'staging'];

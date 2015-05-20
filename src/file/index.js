@@ -53,7 +53,7 @@ File.prototype.writeSync = function (data) {
  * @returns {*}
  * @private
  */
-File.prototype._getUserHome = function () {
+File.prototype.getUserHome = function () {
     return process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
 };
 
@@ -78,10 +78,18 @@ File.prototype.getAbsolutePath = function () {
         this._absolutePath = this.path
             .replace(/\/\.\//g, '')
             .replace(/\.\//g, '')
-            .replace(/^~/, this._getUserHome());
+            .replace(/^~/, this.getUserHome());
     }
 
     return this._absolutePath;
+};
+
+/**
+ * Return true when file is exist otherwise return false
+ * @returns {*}
+ */
+File.prototype.isExist = function () {
+    return fs.existsSync(this.getAbsolutePath());
 };
 
 module.exports = File;

@@ -7,7 +7,7 @@ var Q           = require('q'),
     Farmerfile  = require('../file/farmerfile'),
     Listener    = require('../event-listenr'),
     agent       = require('../farmer-agent'),
-    config      = require(path.resolve(__dirname, '../../toolbelt.conf.js'));
+    config      = require(path.resolve(__dirname, '../config'));
 
 /**
  * @param {Object} program - Commander object
