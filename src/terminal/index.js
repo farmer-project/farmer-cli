@@ -25,7 +25,8 @@ Terminal.prototype.show = function (data) {
             }
 
             delete data['type'];
-            console.log(tab + '*', util.inspect(data['data'], false, null));
+            //console.log(tab + '*', util.inspect(data['data'], false, null));
+            process.stdout.write(data['data']);
         }
     }
 
