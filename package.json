@@ -1,11 +1,15 @@
 {
   "name": "farmer-cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Farmer API client (desktop tool)",
   "main": "src/farmer-cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/farmer-cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/majidgolshadi/farmer-cli"
   },
   "bin": {
     "farmer": "bin/farmer"
