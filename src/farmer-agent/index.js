@@ -1,12 +1,14 @@
 'use strict';
 
-var createAction    = require('./api-client/actions/createAction'),
-    deployAction    = require('./api-client/actions/deployAction'),
-    deleteAction    = require('./api-client/actions/deleteAction'),
-    inspectAction   = require('./api-client/actions/inspectAction'),
-    listAction      = require('./api-client/actions/listAction'),
-    dataResolver    = require('./dataResolver'),
-    config          = require('../config');
+var createAction            = require('./api-client/actions/createAction'),
+    deployAction            = require('./api-client/actions/deployAction'),
+    deleteAction            = require('./api-client/actions/deleteAction'),
+    inspectAction           = require('./api-client/actions/inspectAction'),
+    listAction              = require('./api-client/actions/listAction'),
+    assignDomainAction      = require('./api-client/actions/assignDomainAction'),
+    unassignDomainAction    = require('./api-client/actions/unassignDomainAction'),
+    dataResolver            = require('./dataResolver'),
+    config                  = require('../config');
 
 function Agent () {
 }
@@ -45,6 +47,22 @@ Agent.prototype.deploySeed = function (data) {
 
 Agent.prototype.list = function () {
     return listAction
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.assignDomain = function (data) {
+    return assignDomainAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.unassignDomain = function (data) {
+    return unassignDomainAction
+        .setData(data)
         .executeOn({
             api: config.API
         });
