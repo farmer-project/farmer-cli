@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-require('./exit-handler');
-var program = require('commander').version('0.0.6');
+var program = require('commander').version('0.0.7');
 
 require('./command/create')(program);
 require('./command/deploy')(program);

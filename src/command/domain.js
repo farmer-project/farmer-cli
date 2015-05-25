@@ -39,7 +39,8 @@ Domain.prototype.action = function (operation, description, domain) {
             args: {
                 hostname: info[0],
                 alias: info[1],
-                port: info[2] || '80'
+                port: info[2] || '80',
+                domain: domain
             }
         };
 
@@ -57,7 +58,7 @@ Domain.prototype.action = function (operation, description, domain) {
 
     } else if ('remove' === operation) {
         agent.unassignDomain(data).then(function (res) {
-            console.log('domain:', res.result);
+            console.log(res.result);
         }, console.log).finally(function () {
             process.exit(1);
         });
