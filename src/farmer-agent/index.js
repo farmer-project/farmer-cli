@@ -3,11 +3,11 @@
 var createAction            = require('./api-client/actions/createAction'),
     deployAction            = require('./api-client/actions/deployAction'),
     deleteAction            = require('./api-client/actions/deleteAction'),
+    runScriptAction         = require('./api-client/actions/runScriptAction'),
     inspectAction           = require('./api-client/actions/inspectAction'),
     listAction              = require('./api-client/actions/listAction'),
     assignDomainAction      = require('./api-client/actions/assignDomainAction'),
     unassignDomainAction    = require('./api-client/actions/unassignDomainAction'),
-    dataResolver            = require('./dataResolver'),
     config                  = require('../config');
 
 function Agent () {
@@ -15,7 +15,7 @@ function Agent () {
 
 Agent.prototype.createSeed = function (data) {
     return createAction
-        .setData(dataResolver.createSeed(data))
+        .setData(data)
         .executeOn({
             api: config.API
         });
@@ -39,7 +39,15 @@ Agent.prototype.inspect = function (data) {
 
 Agent.prototype.deploySeed = function (data) {
     return deployAction
-        .setData(dataResolver.deploySeed(data))
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.runOnSeed = function (data) {
+    return runScriptAction
+        .setData(data)
         .executeOn({
             api: config.API
         });

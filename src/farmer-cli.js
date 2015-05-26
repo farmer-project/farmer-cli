@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-var program = require('commander').version('0.0.7');
+var pkjson = require('../package.json'),
+    program = require('commander').version(pkjson.version);
 
 require('./command/create')(program);
 require('./command/deploy')(program);
+require('./command/run')(program);
 require('./command/delete')(program);
 require('./command/list')(program);
 require('./command/inspect')(program);

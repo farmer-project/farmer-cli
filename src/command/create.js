@@ -1,13 +1,12 @@
 'use strict';
 
-var Q           = require('q'),
-    shelljs     = require('shelljs'),
-    path        = require('path'),
-    Terminal    = require('../terminal'),
-    Farmerfile  = require('../file/farmerfile'),
-    Listener    = require('../event-listenr'),
-    agent       = require('../farmer-agent'),
-    config      = require(path.resolve(__dirname, '../config'));
+var Q               = require('q'),
+    path            = require('path'),
+    dataResolver    = require('../farmer-agent/dataResolver'),
+    Terminal        = require('../terminal'),
+    Listener        = require('../event-listenr'),
+    agent           = require('../farmer-agent'),
+    config          = require(path.resolve(__dirname, '../config'));
 
 /**
  * @param {Object} program - Commander object
@@ -38,14 +37,7 @@ Create.prototype.init = function () {
  * @param {Object} options - Commander options object
  */
 Create.prototype.action = function(hostname, options) {
-    var fileUri = path.join(shelljs.pwd(), config.FARMER_FILE),
-        farmerFile = new Farmerfile(fileUri),
-        data = {
-            farmerfile: farmerFile.toJson(),
-            args: {
-                hostname: hostname
-            }
-        };
+    var data = dataResolver.createSeed(hostname);
 
     agent.createSeed(data).then(function (res) {
         var listener = new Listener(config.STATION_SERVER, res.room),

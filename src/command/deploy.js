@@ -1,13 +1,14 @@
 'use strict';
 
-var Q           = require('q'),
-    shelljs     = require('shelljs'),
-    path        = require('path'),
-    Terminal    = require('../terminal'),
-    Farmerfile  = require('../file/farmerfile'),
-    Listener    = require('../event-listenr'),
-    agent       = require('../farmer-agent'),
-    config      = require(path.resolve(__dirname, '../config'));
+var Q               = require('q'),
+    shelljs         = require('shelljs'),
+    path            = require('path'),
+    Terminal        = require('../terminal'),
+    Farmerfile      = require('../file/farmerfile'),
+    Listener        = require('../event-listenr'),
+    dataResolver    = require('../farmer-agent/dataResolver'),
+    agent           = require('../farmer-agent'),
+    config          = require(path.resolve(__dirname, '../config'));
 
 /**
  * @param {Object} program - Commander object
@@ -38,14 +39,7 @@ Deploy.prototype.init = function () {
  * @param {Object} options - Commander options object
  */
 Deploy.prototype.action = function(hostname, options) {
-    var fileUri = path.join(shelljs.pwd(), config.FARMER_FILE),
-        farmerFile = new Farmerfile(fileUri),
-        data = {
-            farmerfile: farmerFile.toJson(),
-            args: {
-                hostname: hostname
-            }
-        };
+    var data = dataResolver.deploySeed(hostname);
 
     agent.deploySeed(data).then(function (res) {
         var listener = new Listener(config.STATION_SERVER, res.room),
