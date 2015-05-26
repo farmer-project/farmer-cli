@@ -24,21 +24,35 @@ Deploy.prototype.init = function () {
     var self = this;
 
     this.program
-        .command('run <tag/yaml/shellCommand> <hostname> ')
+        .command('run')
+        .option('command <commandString> <package:alias>', 'Execute command on container')
+        .option('yaml <fileAddress> <package:alias>', 'Execute batch of commands on container')
+        .option('tag <tagName> <package>', 'Execute batch of commands on containers')
         .description('Run extera shell commands on container or containers')
-        .action(function (commands, hostname) {
-            self.action(commands, hostname);
+        .action(function (operation, firstArg, packageDescription) {
+            self.action(operation, firstArg, packageDescription);
         });
 };
 
 /**
- * Deploy command action definition
- * @param {string} hostname - First command value without tag
- * @param {string} commands - Farmer file tag or yml file address
+ * Run command action definition
+ * @param {string} operation - Operation
+ * @param {string} firstArg - First argument
+ * @param {string} packageDescription - Package description
  */
-Deploy.prototype.action = function(commands, hostname) {
+Deploy.prototype.action = function(operation, firstArg, packageDescription) {
     try {
-        var data = dataResolver.runOnSeed(hostname, commands);
+        var data = {};
+
+        if ('command' === operation) {
+            data = dataResolver.runCommand(packageDescription, firstArg);
+
+        } else if ('yaml' === operation) {
+            data = dataResolver.runCommandFromYaml(packageDescription, firstArg);
+
+        } else if ('tag' === operation) {
+            data = dataResolver.runFarmerfileScript(packageDescription, firstArg);
+        }
 
         agent.runOnSeed(data).then(function (res) {
             var listener = new Listener(config.STATION_SERVER, res.room),
