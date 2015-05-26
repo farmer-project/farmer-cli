@@ -17,11 +17,11 @@ Domain.prototype.init = function () {
 
     this.program
         .command('domain')
-        .option('add', 'Add a domain')
-        .option('remove', 'Remove a domain')
+        .option('add <package:alias> <domain>', 'Add a domain')
+        .option('remove <package:alias> <domain>', 'Remove a domain')
         .description('Manage container domain')
-        .action(function (env, options, domain) {
-            self.action(env, options, domain);
+        .action(function (operation, description, domain) {
+            self.action(operation, description, domain);
         });
 };
 
@@ -43,8 +43,7 @@ Domain.prototype.action = function (operation, description, domain) {
         };
 
     if (!info[0] || !info[1]) {
-        console.log();
-        return console.log('package description error');
+        return console.log('package description error! package:alias');
     }
 
     if ('add' === operation) {
