@@ -8,9 +8,11 @@ var createAction            = require('./api-client/actions/createAction'),
     listAction              = require('./api-client/actions/listAction'),
     assignDomainAction      = require('./api-client/actions/assignDomainAction'),
     unassignDomainAction    = require('./api-client/actions/unassignDomainAction'),
-    createBackupAction      = require('./api-client/actions/createBackup'),
-    restoreBackupAction     = require('./api-client/actions/restoreBackup'),
-    deleteBackupAction      = require('./api-client/actions/deleteBackup'),
+    packageDomainsAction    = require('./api-client/actions/packageDomainsAction'),
+    createBackupAction      = require('./api-client/actions/createBackupAction'),
+    restoreBackupAction     = require('./api-client/actions/restoreBackupAction'),
+    deleteBackupAction      = require('./api-client/actions/deleteBackupAction'),
+    listBackupAction        = require('./api-client/actions/listBackupAction'),
     config                  = require('../config');
 
 function Agent () {
@@ -79,6 +81,14 @@ Agent.prototype.unassignDomain = function (data) {
         });
 };
 
+Agent.prototype.packageDomains = function (data) {
+    return packageDomainsAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
 Agent.prototype.createBackup = function (data) {
     return createBackupAction
         .setData(data)
@@ -103,27 +113,35 @@ Agent.prototype.deleteBackup = function (data) {
         });
 };
 
-Agent.prototype.destroySeed = function (farmerfile) {
+Agent.prototype.listBackup = function (data) {
+    return listBackupAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.destroySeed = function (data) {
 
 };
 
-Agent.prototype.testSeed = function (farmerfile) {
+Agent.prototype.testSeed = function (data) {
 
 };
 
-Agent.prototype.releaseSeed = function (farmerfile) {
+Agent.prototype.releaseSeed = function (data) {
 
 };
 
-Agent.prototype.setupPlant = function (farmerfile) {
+Agent.prototype.setupPlant = function (data) {
 
 };
 
-Agent.prototype.updatePlant = function (farmerfile) {
+Agent.prototype.updatePlant = function (data) {
 
 };
 
-Agent.prototype.destroyPlant = function (farmerfile) {
+Agent.prototype.destroyPlant = function (data) {
 
 };
 

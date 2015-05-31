@@ -20,6 +20,7 @@ Domain.prototype.init = function () {
         .option('create <package> [tag]', 'Create a backup form a package')
         .option('restore <tag>', 'Restore backup')
         .option('delete <tag>', 'Delete generated backup')
+        .option('list <package>', 'List all generated backup for one package')
         .description('Backup package public volumes files')
         .action(function (operation, firstArg, secArg) {
             self.action(operation, firstArg, secArg);
@@ -47,7 +48,7 @@ Domain.prototype.action = function (operation, firstArg, secArg) {
             .createBackup(data)
             .then(function (res) {
 
-                console.log('tag:', res.tag);
+                console.log('tag:', res.result.tag);
 
             }, console.log).finally(function () {
                 process.exit(1);
@@ -84,6 +85,23 @@ Domain.prototype.action = function (operation, firstArg, secArg) {
 
             }, console.log)
             .finally(function () {
+                process.exit(1);
+            })
+        ;
+    } else if ('list' == operation) {
+        data.args = {
+            hostname: firstArg
+        };
+
+        agent
+            .listBackup(data)
+            .then(function (res) {
+
+                res.result.forEach(function (tag) {
+                    console.log(tag);
+                });
+
+            }, console.log).finally(function () {
                 process.exit(1);
             })
         ;
