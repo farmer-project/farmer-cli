@@ -8,6 +8,9 @@ var createAction            = require('./api-client/actions/createAction'),
     listAction              = require('./api-client/actions/listAction'),
     assignDomainAction      = require('./api-client/actions/assignDomainAction'),
     unassignDomainAction    = require('./api-client/actions/unassignDomainAction'),
+    createBackupAction      = require('./api-client/actions/createBackup'),
+    restoreBackupAction     = require('./api-client/actions/restoreBackup'),
+    deleteBackupAction      = require('./api-client/actions/deleteBackup'),
     config                  = require('../config');
 
 function Agent () {
@@ -70,6 +73,30 @@ Agent.prototype.assignDomain = function (data) {
 
 Agent.prototype.unassignDomain = function (data) {
     return unassignDomainAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.createBackup = function (data) {
+    return createBackupAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.restoreBackup = function (data) {
+    return restoreBackupAction
+        .setData(data)
+        .executeOn({
+            api: config.API
+        });
+};
+
+Agent.prototype.deleteBackup = function (data) {
+    return deleteBackupAction
         .setData(data)
         .executeOn({
             api: config.API

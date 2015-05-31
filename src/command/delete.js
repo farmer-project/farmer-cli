@@ -3,7 +3,8 @@
 var Q           = require('q'),
     Terminal    = require('../terminal'),
     Listener    = require('../event-listenr'),
-    agent       = require('../farmer-agent');
+    agent       = require('../farmer-agent'),
+    config      = require('../config');
 
 /**
  * @param {Object} program - Commander object

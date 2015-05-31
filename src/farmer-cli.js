@@ -9,6 +9,7 @@ require('./command/delete')(program);
 require('./command/list')(program);
 require('./command/inspect')(program);
 require('./command/domain')(program);
+require('./command/backup')(program);
 //require('./command/image')(program);
 //require('./command/update')(program);
 
