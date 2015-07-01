@@ -64,7 +64,8 @@ To get familiar with the few words we're using please refer to [Glossary](docs/g
         
         # 2) Restart your application
         - forever restart /app/src/index.js 
-    ```
+    ```   
+
 ### Screenshot
 ![Farmer Terminal Screenshot](docs/images/farmer-client.png)
 
