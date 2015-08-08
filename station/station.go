@@ -1,19 +1,19 @@
 package station
 
 import (
-	"github.com/streadway/amqp"
-	"os"
 	"fmt"
+	"os"
+
+	"github.com/streadway/amqp"
 )
 
 type Stream struct {
-	AmqpUri   string `json:"Amqp"`
-	QueueName string `json:"RoomID"`
+	AmqpUri   string `json:"amqp_uri"`
+	QueueName string `json:"queue_name"`
 }
 
 func (s *Stream) Consume() error {
-//	conn, err := amqp.Dial(s.AmqpUri)
-	conn, err := amqp.Dial("amqp://ahmad:ahmad@192.168.4.79:32961/")
+	conn, err := amqp.Dial(s.AmqpUri)
 	defer conn.Close()
 
 	if err != nil {
@@ -31,11 +31,11 @@ func (s *Stream) Consume() error {
 
 	q, err := channel.QueueDeclare(
 		s.QueueName, // name
-		false,   // durable
-		true,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		false,       // durable
+		true,        // delete when unused
+		false,       // exclusive
+		false,       // no-wait
+		nil,         // arguments
 	)
 
 	if err != nil {

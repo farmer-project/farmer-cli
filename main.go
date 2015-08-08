@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/farmer-project/farmer-cli/command"
+	"github.com/farmer-project/farmer-cli/config"
+
 	"github.com/codegangsta/cli"
-	"github.com/ahmadrabie/farmer-cli/command"
-	"github.com/ahmadrabie/farmer-cli/config"
-	"fmt"
 )
 
 func main() {
@@ -18,8 +19,9 @@ func main() {
 	app.Commands = []cli.Command{
 		command.CreateCmd(),
 		command.DeployCmd(),
-		command.DeleteCmd(),
+		command.RemoveCmd(),
 		command.ListCmd(),
+		command.InspectCmd(),
 	}
 
 	app.Run(os.Args)

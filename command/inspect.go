@@ -12,43 +12,46 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
-func ListCmd() cli.Command {
+func InspectCmd() cli.Command {
 	return cli.Command{
-		Name:        "list",
-		Usage:       "list boxes",
-		Description: "list all boxes and display box info",
+		Name:        "inspect",
+		Usage:       "inspect box data <Hostname>",
+		Description: "inspect deatail data of box <Hostname>",
 		Flags:       AppFlags,
-		Action:      list,
+		Action:      inspect,
 	}
 }
 
-func list(context *cli.Context) {
-	reqArr := []*box{}
+func inspect(context *cli.Context) {
+	if !context.Args().Present() {
+		fmt.Println("Do you forget to set Hostname for farmer?")
+		return
+	}
+
+	req := box{}
+	name := context.Args().First()
 	s := napping.Session{}
 	h := &http.Header{}
 	h.Set("Content-Type", CONTENT_TYPE)
 	s.Header = h
-	url := os.Getenv(config.SERVER_URL) + "/boxes"
-	resp, err := s.Get(url, nil, &reqArr, nil)
+	url := os.Getenv(config.SERVER_URL) + "/boxes/" + name
+	resp, err := s.Get(url, nil, &req, nil)
+
 	if err != nil {
 		return
 	}
 
-	fmt.Println(resp.RawText())
-
 	if resp.Status() == 200 {
-
-		data := [][]string{}
-		for _, item := range reqArr {
-			data = append(data, []string{
-				item.Name,
-				item.RepoUrl,
-				item.PathSpec,
-				item.Image,
-				item.Status,
-				item.CreatedAt,
-				item.UpdatedAt,
-			})
+		data := [][]string{
+			[]string{
+				req.Name,
+				req.RepoUrl,
+				req.PathSpec,
+				req.Image,
+				req.Status,
+				req.CreatedAt,
+				req.UpdatedAt,
+			},
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetHeader([]string{

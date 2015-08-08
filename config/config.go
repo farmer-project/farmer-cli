@@ -20,6 +20,14 @@ const (
 	config_name = ".farmer.cfg"
 )
 
+type FarmerConfig struct {
+	Server   string
+	Username string
+	Password string
+
+	configFile string
+}
+
 func LoadConfig(c *FarmerConfig) error {
 	HomePath, err := homedir.Dir()
 	if err != nil {

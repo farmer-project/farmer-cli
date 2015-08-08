@@ -2,12 +2,14 @@ package command
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
-	"github.com/ahmadrabie/farmer-cli/config"
+	"github.com/farmer-project/farmer-cli/config"
+	"github.com/farmer-project/farmer-cli/station"
+
 	"github.com/codegangsta/cli"
 	"github.com/jmcvetta/napping"
-	"github.com/ahmadrabie/farmer-cli/station"
 )
 
 func CreateCmd() cli.Command {
@@ -15,15 +17,15 @@ func CreateCmd() cli.Command {
 		Name:        "create",
 		Usage:       "create <Hostname>",
 		Description: "Create a new Docker container with <Hostname>",
-		Flags: AppFlags,
-		Action: create,
+		Flags:       AppFlags,
+		Action:      create,
 	}
 }
 
 type request struct {
-	Hostname   string `json:"name"`
-	Repository string `json:"repo"`
-	Pathspec   string `json:"pathspec"`
+	Name     string `json:"name"`
+	RepoUrl  string `json:"repo_url"`
+	PathSpec string `json:"pathspec"`
 }
 
 func create(context *cli.Context) {
@@ -33,21 +35,24 @@ func create(context *cli.Context) {
 	}
 
 	req := request{
-		Hostname:   context.Args().First(),
-		Repository: context.String("repository"),
-		Pathspec:   context.String("pathspec"),
+		Name:     context.Args().First(),
+		RepoUrl:  context.String("repository"),
+		PathSpec: context.String("pathspec"),
 	}
 
-	var stream station.Stream
+	stream := station.Stream{}
 
 	s := napping.Session{}
+	h := &http.Header{}
+	h.Set("Content-Type", CONTENT_TYPE)
+	s.Header = h
 	url := os.Getenv(config.SERVER_URL) + "/boxes"
 	resp, err := s.Post(url, &req, &stream, nil)
 
 	if err != nil {
 		return
 	}
-
+	fmt.Println(stream)
 	if resp.Status() == 201 {
 		if err := stream.Consume(); err != nil {
 			fmt.Println("Stream Consume Error", err)
