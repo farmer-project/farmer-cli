@@ -1,13 +1,11 @@
 package command
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
-	"github.com/farmer-project/farmer-cli/config"
-
 	"github.com/codegangsta/cli"
+	"github.com/farmer-project/farmer-cli/config"
 	"github.com/jmcvetta/napping"
 	"github.com/olekukonko/tablewriter"
 )
@@ -33,8 +31,6 @@ func list(context *cli.Context) {
 	if err != nil {
 		return
 	}
-
-	fmt.Println(resp.RawText())
 
 	if resp.Status() == 200 {
 

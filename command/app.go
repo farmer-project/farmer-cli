@@ -1,8 +1,6 @@
 package command
 
-import (
-	"github.com/codegangsta/cli"
-)
+import "github.com/codegangsta/cli"
 
 const CONTENT_TYPE = "application/json"
 

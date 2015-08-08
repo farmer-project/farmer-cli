@@ -5,9 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/farmer-project/farmer-cli/config"
-
 	"github.com/codegangsta/cli"
+	"github.com/farmer-project/farmer-cli/config"
 	"github.com/jmcvetta/napping"
 	"github.com/olekukonko/tablewriter"
 )
