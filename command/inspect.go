@@ -1,69 +1,31 @@
 package command
 
 import (
-	"fmt"
-	"net/http"
-	"os"
-
 	"github.com/codegangsta/cli"
-	"github.com/farmer-project/farmer-cli/config"
-	"github.com/jmcvetta/napping"
-	"github.com/olekukonko/tablewriter"
+	"github.com/farmer-project/farmer-cli/api"
+	"github.com/farmer-project/farmer/farmer"
 )
 
 func InspectCmd() cli.Command {
 	return cli.Command{
 		Name:        "inspect",
-		Usage:       "inspect box data <Hostname>",
-		Description: "inspect deatail data of box <Hostname>",
-		Flags:       AppFlags,
-		Action:      inspect,
+		Usage:       "<boxname>",
+		Description: "Displays box's details such as repository Url, current branch specifier, state, etc.",
+		Action:      inspectAction,
 	}
 }
 
-func inspect(context *cli.Context) {
+func inspectAction(context *cli.Context) {
 	if !context.Args().Present() {
-		fmt.Println("Do you forget to set Hostname for farmer?")
-		return
+		panic("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
 	}
 
-	req := box{}
-	name := context.Args().First()
-	s := napping.Session{}
-	h := &http.Header{}
-	h.Set("Content-Type", CONTENT_TYPE)
-	s.Header = h
-	url := os.Getenv(config.SERVER_URL) + "/boxes/" + name
-	resp, err := s.Get(url, nil, &req, nil)
+	box := &farmer.Box{}
+	api.Get("/boxes/"+context.Args().First(), nil, box)
 
-	if err != nil {
-		return
-	}
-
-	if resp.Status() == 200 {
-		data := [][]string{
-			[]string{
-				req.Name,
-				req.RepoUrl,
-				req.PathSpec,
-				req.Image,
-				req.Status,
-				req.CreatedAt,
-				req.UpdatedAt,
-			},
-		}
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{
-			"Name",
-			"Repository",
-			"Pathspec",
-			"Image",
-			"Status",
-			"createdAt",
-			"UpdatedAt",
-		})
-		table.SetBorder(true)
-		table.AppendBulk(data)
-		table.Render()
-	}
+	generateBoxesTable(
+		[]*farmer.Box{
+			box,
+		},
+	)
 }

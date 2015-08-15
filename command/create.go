@@ -2,59 +2,54 @@ package command
 
 import (
 	"fmt"
-	"net/http"
-	"os"
-
 	"github.com/codegangsta/cli"
-	"github.com/farmer-project/farmer-cli/config"
-	"github.com/farmer-project/farmer-cli/station"
-	"github.com/jmcvetta/napping"
+	"github.com/farmer-project/farmer-cli/api"
+	"github.com/farmer-project/farmer-cli/hub"
+	"github.com/farmer-project/farmer/api/request"
 )
 
 func CreateCmd() cli.Command {
 	return cli.Command{
 		Name:        "create",
-		Usage:       "create <Hostname>",
-		Description: "Create a new Docker container with <Hostname>",
-		Flags:       AppFlags,
-		Action:      create,
+		Usage:       "<boxname> --repo=REPOSITORY_URL [--pathspec=BRANCH]",
+		Description: "Create a new box with given name and clone code from provided git repository.",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "repo, r",
+				Usage: "Git repository URL to clone on box",
+			},
+			cli.StringFlag{
+				Name:  "pathspec, p",
+				Value: "master",
+				Usage: "Branch specifier used as the Git path when cloning the code, e.g. master, tags/v2.3",
+			},
+		},
+		Action: createAction,
 	}
 }
 
-type request struct {
-	Name     string `json:"name"`
-	RepoUrl  string `json:"repo_url"`
-	PathSpec string `json:"pathspec"`
-}
-
-func create(context *cli.Context) {
+func createAction(context *cli.Context) {
 	if !context.Args().Present() {
-		fmt.Println("Do you forget to set Hostname for farmer?")
-		return
+		panic("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
 	}
 
-	req := request{
+	if context.String("repo") == "" {
+		panic("You must specify a 'repo' (Git repository Url) to clone code on the box.\nSee 'farmer create --help' for more info.")
+	}
+
+	if context.String("pathspec") == "" {
+		fmt.Println("Warning: Box will clone 'master' branch of the provided repository.")
+	}
+
+	stream := hub.Stream{}
+	request := request.CreateRequest{
 		Name:     context.Args().First(),
-		RepoUrl:  context.String("repository"),
-		PathSpec: context.String("pathspec"),
+		RepoUrl:  context.String("repo"),
+		Pathspec: context.String("pathspec"),
 	}
 
-	stream := station.Stream{}
-
-	s := napping.Session{}
-	h := &http.Header{}
-	h.Set("Content-Type", CONTENT_TYPE)
-	s.Header = h
-	url := os.Getenv(config.SERVER_URL) + "/boxes"
-	resp, err := s.Post(url, &req, &stream, nil)
-
-	if err != nil {
-		return
-	}
-	fmt.Println(stream)
-	if resp.Status() == 201 {
-		if err := stream.Consume(); err != nil {
-			fmt.Println("Stream Consume Error", err)
-		}
+	api.Post("/boxes", &request, &stream)
+	if err := stream.Consume(); err != nil {
+		panic("Could not consume the stream from Farmer server.")
 	}
 }

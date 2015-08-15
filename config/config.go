@@ -6,98 +6,65 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/go-homedir"
-)
-
-const (
-	SERVER_URL = "FARMER_CLIENT_SERVER_URL"
-	USERNAME   = "FARMER_CLIENT_USERNAME"
-	PASSWORD   = "FARMER_CLIENT_PASSWORD"
-
-	get_server_message   = "Farmer Server URL:"
-	get_username_message = "Farmer username:"
-	get_password_message = "Farmer password:"
-
-	config_name = ".farmer.cfg"
+	"reflect"
+	"strings"
 )
 
 type FarmerConfig struct {
-	Server   string
-	Username string
-	Password string
-
-	configFile string
+	ServerUrl string
 }
 
-func LoadConfig(c *FarmerConfig) error {
-	HomePath, err := homedir.Dir()
+var (
+	configPath   string
+	farmerConfig FarmerConfig
+	reflection   reflect.Value
+)
+
+func init() {
+	homePath, err := homedir.Dir()
 	if err != nil {
-		return err
+		panic(err)
+	}
+	configPath = homePath + "/.farmer.cfg"
+
+	// Make sure it exists and contains settings
+	ensureConfig()
+
+	// Load the config
+	if _, err := toml.DecodeFile(configPath, &farmerConfig); err != nil {
+		panic(err)
 	}
 
-	c.configFile = HomePath + "/" + config_name
-	if fileExists := check(c.configFile); !fileExists {
-		Reset(c)
-	}
-
-	if _, err := toml.DecodeFile(c.configFile, &c); err != nil {
-		return err
-	}
-
-	return configToEnv(c)
+	reflection = reflect.ValueOf(farmerConfig)
 }
 
-func Reset(c *FarmerConfig) error {
-	fmt.Println(get_server_message)
-	fmt.Scanln(&c.Server)
-
-	fmt.Println(get_username_message)
-	fmt.Scanln(&c.Username)
-
-	fmt.Println(get_password_message)
-	fmt.Scanln(&c.Password)
-
-	if fileExists := check(c.configFile); fileExists {
-		if err := os.Remove(c.configFile); err != nil {
-			return err
-		}
-	}
-
-	return set(c)
+func Get(name string) string {
+	field := reflect.Indirect(reflection).FieldByName(name)
+	return string(field.String())
 }
 
-func configToEnv(c *FarmerConfig) error {
-	if err := os.Setenv(SERVER_URL, c.Server); err != nil {
-		return err
-	}
-
-	if err := os.Setenv(USERNAME, c.Username); err != nil {
-		return err
-	}
-
-	if err := os.Setenv(PASSWORD, c.Password); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func check(configFile string) bool {
-	if _, err := os.Stat(configFile); err == nil {
-		return true
-	}
-
-	return false
-}
-
-func set(c *FarmerConfig) error {
-	fo, err := os.Create(c.configFile)
-
+func Reconfigure() {
+	fo, err := os.Create(configPath)
 	defer fo.Close()
 
 	if err != nil {
-		return err
+		panic(err)
 	}
-	e := toml.NewEncoder(fo)
-	fmt.Println(e)
-	return e.Encode(&c)
+
+	fmt.Print("Farmer API Server URL: ")
+	fmt.Scanln(&farmerConfig.ServerUrl)
+	farmerConfig.ServerUrl = strings.TrimRight(farmerConfig.ServerUrl, "/")
+
+	err = toml.NewEncoder(fo).Encode(&farmerConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("New configuration successfully saved on: " + configPath)
+}
+
+func ensureConfig() {
+	if _, err := os.Stat(configPath); err != nil {
+		Reconfigure()
+	}
 }
