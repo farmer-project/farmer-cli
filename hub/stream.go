@@ -1,7 +1,6 @@
-package station
+package hub
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/streadway/amqp"
@@ -17,7 +16,6 @@ func (s *Stream) Consume() error {
 	defer conn.Close()
 
 	if err != nil {
-		fmt.Println("DialErr")
 		return err
 	}
 
@@ -25,7 +23,6 @@ func (s *Stream) Consume() error {
 	defer channel.Close()
 
 	if err != nil {
-		fmt.Println("ChannelERrr")
 		return err
 	}
 
@@ -39,7 +36,6 @@ func (s *Stream) Consume() error {
 	)
 
 	if err != nil {
-		fmt.Println("QueueDeclareErr")
 		return err
 	}
 
@@ -54,7 +50,6 @@ func (s *Stream) Consume() error {
 	)
 
 	if err != nil {
-		fmt.Println("ConsumeErr")
 		return err
 	}
 

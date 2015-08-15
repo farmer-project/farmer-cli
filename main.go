@@ -1,27 +1,30 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/farmer-project/farmer-cli/command"
-	"github.com/farmer-project/farmer-cli/config"
-
 	"github.com/codegangsta/cli"
+	"github.com/farmer-project/farmer-cli/command"
+	"os"
 )
 
-func main() {
-	err := config.LoadConfig(&config.FarmerConfig{})
-	fmt.Println(err)
+func createApp() *cli.App {
+	app := cli.NewApp()
+	app.Name = "farmer-cli"
+	app.Version = "0.1"
+	app.Usage = "Client for open-source PaaS project Farmer"
 
-	app := command.CreateApp()
+	return app
+}
+
+func main() {
+	app := createApp()
 
 	app.Commands = []cli.Command{
 		command.CreateCmd(),
 		command.DeployCmd(),
-		command.RemoveCmd(),
 		command.ListCmd(),
 		command.InspectCmd(),
+		command.DestroyCmd(),
+		command.ConfigureCmd(),
 	}
 
 	app.Run(os.Args)
