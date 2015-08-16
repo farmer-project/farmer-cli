@@ -25,6 +25,8 @@ func main() {
 		command.InspectCmd(),
 		command.DestroyCmd(),
 		command.ConfigureCmd(),
+		command.DomainAddCmd(),
+		command.DomainRemoveCmd(),
 	}
 
 	app.Run(os.Args)

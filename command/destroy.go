@@ -17,11 +17,16 @@ func DestroyCmd() cli.Command {
 
 func destroyAction(context *cli.Context) {
 	if !context.Args().Present() {
-		panic("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		println("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		return
 	}
 
 	name := context.Args().First()
 
-	api.Delete("/boxes/"+name, nil)
-	fmt.Printf("Box '%s' is destroyed successfully.", name)
+	if err := api.Delete("/boxes/"+name, nil); err != nil {
+		println(err.Error())
+		return
+	}
+
+	fmt.Printf("Box '%s' is destroyed successfully. \n", name)
 }
