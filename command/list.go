@@ -19,7 +19,10 @@ func ListCmd() cli.Command {
 
 func listAction(context *cli.Context) {
 	boxes := []*farmer.Box{}
-	api.Get("/boxes", nil, &boxes)
+	if err := api.Get("/boxes", nil, &boxes); err != nil {
+		println(err.Error())
+		return
+	}
 
 	generateBoxesTable(boxes)
 }

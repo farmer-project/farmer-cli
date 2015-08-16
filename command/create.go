@@ -1,7 +1,6 @@
 package command
 
 import (
-	"fmt"
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/hub"
@@ -30,15 +29,18 @@ func CreateCmd() cli.Command {
 
 func createAction(context *cli.Context) {
 	if !context.Args().Present() {
-		panic("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		println("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		return
 	}
 
 	if context.String("repo") == "" {
-		panic("You must specify a 'repo' (Git repository Url) to clone code on the box.\nSee 'farmer create --help' for more info.")
+		println("You must specify a 'repo' (Git repository Url) to clone code on the box.\nSee 'farmer create --help' for more info.")
+		return
 	}
 
 	if context.String("pathspec") == "" {
-		fmt.Println("Warning: Box will clone 'master' branch of the provided repository.")
+		println("Warning: Box will clone 'master' branch of the provided repository.")
+		return
 	}
 
 	stream := hub.Stream{}
@@ -48,8 +50,13 @@ func createAction(context *cli.Context) {
 		Pathspec: context.String("pathspec"),
 	}
 
-	api.Post("/boxes", &request, &stream)
+	if err := api.Post("/boxes", &request, &stream); err != nil {
+		println(err.Error())
+		return
+	}
+
 	if err := stream.Consume(); err != nil {
-		panic("Could not consume the stream from Farmer server.")
+		println("Could not consume the stream from Farmer server.")
+		return
 	}
 }

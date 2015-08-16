@@ -25,11 +25,13 @@ func DeployCmd() cli.Command {
 
 func deployAction(context *cli.Context) {
 	if !context.Args().Present() {
-		panic("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		println("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
+		return
 	}
 
 	if context.String("pathspec") == "" {
-		panic("You must specify a 'pathspec' (Git branch specifier) to pull the code from.\nSee 'farmer create --help' for more info.")
+		println("You must specify a 'pathspec' (Git branch specifier) to pull the code from.\nSee 'farmer create --help' for more info.")
+		return
 	}
 
 	stream := hub.Stream{}
@@ -37,8 +39,13 @@ func deployAction(context *cli.Context) {
 		Pathspec: context.String("pathspec"),
 	}
 
-	api.Put("/boxes/"+context.Args().First(), &request, &stream)
+	if err := api.Put("/boxes/"+context.Args().First(), &request, &stream); err != nil {
+		println(err.Error())
+		return
+	}
+
 	if err := stream.Consume(); err != nil {
-		panic("Could not consume the stream from Farmer server.")
+		println("Could not consume the stream from Farmer server.")
+		return
 	}
 }

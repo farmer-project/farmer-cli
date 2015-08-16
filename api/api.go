@@ -1,47 +1,42 @@
 package api
 
 import (
+	"errors"
 	"github.com/farmer-project/farmer-cli/config"
 	"github.com/jmcvetta/napping"
 	"net/http"
 )
 
-func Get(path string, params *napping.Params, result interface{}) *napping.Response {
+func Get(path string, params *napping.Params, result interface{}) error {
 	resp, err := newSession().Get(config.Get("ServerUrl")+path, params, &result, nil)
-	checkResponseError(resp, err)
-
-	return resp
+	return checkResponseError(resp, err)
 }
 
-func Delete(path string, result interface{}) *napping.Response {
+func Delete(path string, result interface{}) error {
 	resp, err := newSession().Delete(config.Get("ServerUrl")+path, &result, nil)
-	checkResponseError(resp, err)
-
-	return resp
+	return checkResponseError(resp, err)
 }
 
-func Post(path string, payload, result interface{}) *napping.Response {
+func Post(path string, payload, result interface{}) error {
 	resp, err := newSession().Post(config.Get("ServerUrl")+path, &payload, &result, nil)
-	checkResponseError(resp, err)
-
-	return resp
+	return checkResponseError(resp, err)
 }
 
-func Put(path string, payload, result interface{}) *napping.Response {
+func Put(path string, payload, result interface{}) error {
 	resp, err := newSession().Put(config.Get("ServerUrl")+path, &payload, &result, nil)
-	checkResponseError(resp, err)
-
-	return resp
+	return checkResponseError(resp, err)
 }
 
-func checkResponseError(resp *napping.Response, err error) {
+func checkResponseError(resp *napping.Response, err error) error {
 	if err != nil {
-		panic("Could not send request to Farmer server. (" + err.Error() + ")")
+		return errors.New("Could not send request to Farmer server. (" + err.Error() + ")")
 	}
 
-	if resp.Status() != 201 && resp.Status() != 200 {
-		panic("Unexpected response from Farmer server. (" + resp.Error.(string) + ")")
+	if resp.Status() != 201 && resp.Status() != 200 && resp.Status() != 204 {
+		return errors.New("Unexpected response from Farmer server. (" + resp.RawText() + ")")
 	}
+
+	return nil
 }
 
 func newSession() *napping.Session {
