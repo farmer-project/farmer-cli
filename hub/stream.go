@@ -57,11 +57,16 @@ func (s *Stream) Consume() error {
 
 	go func() {
 		for d := range msgs {
+			if string(d.Body) == "kthxbai"{
+				forever <- true
+				return
+			}
 			os.Stdout.Write(d.Body)
 		}
 	}()
 
 	<-forever
+	conn.Close()
 
 	return nil
 }
