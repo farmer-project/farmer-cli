@@ -1,3 +1,0 @@
----
-api_server: "google.com/api/v1"
-apt_cache_proxy: http://apt-cache:3142

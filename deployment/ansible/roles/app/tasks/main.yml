@@ -1,4 +1,0 @@
----
-- name: Install npm dependencies
-  sudo: yes
-  npm: path=/var/www
