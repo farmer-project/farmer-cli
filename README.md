@@ -1,6 +1,8 @@
 # Farmer Client
 Command-line program to manage a [Farmer server](https://github.com/farmer-project/farmer) instance.
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/farmer-project/farmer-cli)
+
 ## Installation
 You need to run `go get` to build and run `farmer-cli`:
 ```sh
@@ -53,3 +55,6 @@ Lists all created boxes along with their state if they're running or not.
 ```sh
 farmer-cli list
 ```
+
+## License
+Visit our **[MIT License](LICENSE)**.
