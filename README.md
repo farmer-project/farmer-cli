@@ -11,7 +11,7 @@ go get github.com/farmer-project/farmer-cli
 Make sure you have an already running [Farmer server](https://github.com/farmer-project/farmer) read its README.md, because before you can create your boxes you need to [**know about `.farmer.yml`**](https://github.com/farmer-project/farmer/blob/master/docs/farmer.yml.md) file
 
 ## Usage
-First you need to configure your client. (You will need your `Farmer server API URL` after you've had a successful farmer server installation.)
+First you need to configure your client. (You will need your `Farmer server API URL` after you've had a successful [farmer server installation](https://github.com/farmer-project/farmer#quick-installation).)
 ```sh
 farmer-cli configure
 ```
@@ -26,7 +26,7 @@ farmer-cli create bob_app -r https://github.com/foo/app.git -p master
 farmer-cli create carol_app --repository=https://github.com/foo/app.git # Uses "master" branch by default.
 ```
 
-### Assign/Remove a Domain of a Box
+### Assign a Domain to a Box
 Any box can have as many domains as you like using domain command like below:
 ```sh
 farmer-cli domain-add alice_app --domain=alice-app.com --port=8080
