@@ -43,7 +43,7 @@ farmer-cli deploy bob_app --pathspec=feature/my-new-feature
 ```
 
 ### Destroy a Box
-Completely removes a box and its cloned code, database and user created content if any.
+Completely removes a box and its source codes, database and user created content if any.
 ```sh
 farmer-cli destroy carol_app
 ```
