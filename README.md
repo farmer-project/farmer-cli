@@ -23,7 +23,7 @@ Some examples are:
 ```sh
 farmer-cli create alice_app --repository=https://github.com/foo/app.git --pathspec=tags/v0.2
 farmer-cli create bob_app -r https://github.com/foo/app.git -p master
-farmer-cli create carol_app --repository=https://github.com/foo/app.git # Uses "master" branch by default.
+farmer-cli create carol_app --repository=https://github.com/foo/carol-app.git # Uses "master" branch by default.
 ```
 
 ### Assign a Domain to a Box
