@@ -23,7 +23,7 @@ Some examples are:
 ```sh
 farmer-cli create alice_app --repository=https://github.com/foo/app.git --pathspec=tags/v0.2
 farmer-cli create bob_app -r https://github.com/foo/app.git -p master
-farmer-cli create carol_app --repository=https://github.com/foo/app.git # "master" by default.
+farmer-cli create carol_app --repository=https://github.com/foo/app.git # Uses "master" branch by default.
 ```
 
 ### Assign/Remove a Domain of a Box
@@ -35,8 +35,8 @@ farmer-cli domain-add bob_app --domain=bob-app.com # port 80 by default.
 farmer-cli domain-remove alice_app --domain=alice-app.com
 ```
 
-### Deploy a on a Box
-Deploying on a box means you to upgrade its version to simply fetch new changes of the branch that this box is created upon. You provide a new `pathspec` (git branch or a git tag) and farmer fetches the new code and runs the `deploy` script if it is defined in [.farmer.yml](https://github.com/farmer-project/farmer/blob/master/docs/farmer.yml.md)
+### Deploy on a Box
+Deploying on a box means you want to upgrade that box's source code to simply fetch new changes of the branch that this box is created upon. You provide a new `pathspec` (git branch or a git tag) and farmer fetches the new code and runs the `deploy` script if it is defined in [.farmer.yml](https://github.com/farmer-project/farmer/blob/master/docs/farmer.yml.md)
 ```sh
 farmer-cli deploy alice_app --pathspec=tags/v3.4
 farmer-cli deploy bob_app --pathspec=feature/my-new-feature
