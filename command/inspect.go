@@ -36,22 +36,24 @@ func inspectAction(context *cli.Context) {
 func generateBoxTable(box *farmer.Box) {
 	data := [][]string{}
 	data = append(data, []string{
+		box.Status,
 		box.Name,
 		box.RepoUrl,
 		box.Pathspec,
 		box.Image,
-		box.Status,
+		box.Home,
 		strings.Join(box.Ports, ","),
 		domainsToString(box.Domains),
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
+		"Status",
 		"Name",
 		"Repository",
 		"Pathspec",
 		"Image",
-		"Status",
+		"Home",
 		"Ports",
 		"Domains",
 	})
