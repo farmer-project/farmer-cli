@@ -15,7 +15,6 @@ func DeployCmd() cli.Command {
 		Flags: []cli.Flag{
 			cli.StringFlag{
 				Name:  "pathspec, p",
-				Value: "master",
 				Usage: "Branch specifier used as the Git path when cloning the code, e.g. master, tags/v2.3",
 			},
 		},
@@ -26,11 +25,6 @@ func DeployCmd() cli.Command {
 func deployAction(context *cli.Context) {
 	if !context.Args().Present() {
 		println("You must specify a 'name' for the box you want to create.\nSee 'farmer create --help' for more info.")
-		return
-	}
-
-	if context.String("pathspec") == "" {
-		println("You must specify a 'pathspec' (Git branch specifier) to pull the code from.\nSee 'farmer create --help' for more info.")
 		return
 	}
 
