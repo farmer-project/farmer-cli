@@ -10,7 +10,7 @@ import (
 func DeployCmd() cli.Command {
 	return cli.Command{
 		Name:        "deploy",
-		Usage:       "<boxname> --pathspec=BRANCH",
+		Usage:       "<boxname> [--pathspec=BRANCH]",
 		Description: "Updates a box's code from provided Git branch specifier. Note code will be pulled from repository Url you've provided when creating the box.",
 		Flags: []cli.Flag{
 			cli.StringFlag{
