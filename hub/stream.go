@@ -57,7 +57,7 @@ func (s *Stream) Consume() error {
 
 	go func() {
 		for d := range msgs {
-			if string(d.Body) == "kthxbai"{
+			if string(d.Body) == "kthxbai" {
 				forever <- true
 				return
 			}

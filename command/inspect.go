@@ -1,12 +1,13 @@
 package command
 
 import (
-	"github.com/codegangsta/cli"
-	"github.com/farmer-project/farmer-cli/api"
-	"github.com/farmer-project/farmer/farmer"
-	"github.com/olekukonko/tablewriter"
 	"os"
 	"strings"
+
+	"github.com/codegangsta/cli"
+	"github.com/farmer-project/farmer-cli/api"
+	"github.com/farmer-project/farmer-cli/api/response"
+	"github.com/olekukonko/tablewriter"
 )
 
 func InspectCmd() cli.Command {
@@ -24,7 +25,7 @@ func inspectAction(context *cli.Context) {
 		return
 	}
 
-	box := &farmer.Box{}
+	box := &response.Box{}
 	if err := api.Get("/boxes/"+context.Args().First(), nil, box); err != nil {
 		println(err.Error())
 		return
@@ -33,10 +34,10 @@ func inspectAction(context *cli.Context) {
 	generateBoxTable(box)
 }
 
-func generateBoxTable(box *farmer.Box) {
+func generateBoxTable(box *response.Box) {
 	data := [][]string{}
 	data = append(data, []string{
-		box.Status,
+		box.State,
 		box.Name,
 		box.RepoUrl,
 		box.Pathspec,
@@ -48,7 +49,7 @@ func generateBoxTable(box *farmer.Box) {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
-		"Status",
+		"State",
 		"Name",
 		"Repository",
 		"Pathspec",
@@ -62,7 +63,7 @@ func generateBoxTable(box *farmer.Box) {
 	table.Render()
 }
 
-func domainsToString(domains []farmer.Domain) string {
+func domainsToString(domains []response.Domain) string {
 	var output string
 	for _, domain := range domains {
 		output += domain.Url + "->" + domain.Port + ", "

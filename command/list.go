@@ -5,7 +5,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
-	"github.com/farmer-project/farmer/farmer"
+	"github.com/farmer-project/farmer-cli/api/response"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -18,7 +18,7 @@ func ListCmd() cli.Command {
 }
 
 func listAction(context *cli.Context) {
-	boxes := []*farmer.Box{}
+	boxes := []*response.Box{}
 	if err := api.Get("/boxes", nil, &boxes); err != nil {
 		println(err.Error())
 		return
@@ -27,7 +27,7 @@ func listAction(context *cli.Context) {
 	generateBoxesTable(boxes)
 }
 
-func generateBoxesTable(boxes []*farmer.Box) {
+func generateBoxesTable(boxes []*response.Box) {
 	data := [][]string{}
 
 	for _, item := range boxes {
@@ -36,7 +36,7 @@ func generateBoxesTable(boxes []*farmer.Box) {
 			item.RepoUrl,
 			item.Pathspec,
 			item.Image,
-			item.Status,
+			item.State,
 		})
 	}
 
@@ -46,7 +46,7 @@ func generateBoxesTable(boxes []*farmer.Box) {
 		"Repository",
 		"Pathspec",
 		"Image",
-		"Status",
+		"State",
 	})
 	table.SetBorder(true)
 	table.AppendBulk(data)
