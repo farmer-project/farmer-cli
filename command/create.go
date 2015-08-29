@@ -4,7 +4,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/hub"
-	"github.com/farmer-project/farmer/api/request"
+	"github.com/farmer-project/farmer-cli/api/request"
 )
 
 func CreateCmd() cli.Command {

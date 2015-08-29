@@ -4,15 +4,19 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/hub"
-	"github.com/farmer-project/farmer/api/request"
+	"github.com/farmer-project/farmer-cli/api/request"
 )
 
 func DeployCmd() cli.Command {
 	return cli.Command{
 		Name:        "deploy",
-		Usage:       "<boxname> [--pathspec=BRANCH]",
+		Usage:       "<boxname> [--repo=REPOSITORY_URL] [--pathspec=BRANCH]",
 		Description: "Updates a box's code from provided Git branch specifier. Note code will be pulled from repository Url you've provided when creating the box.",
 		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "repo, r",
+				Usage: "Git repository URL to clone on box",
+			},
 			cli.StringFlag{
 				Name:  "pathspec, p",
 				Usage: "Branch specifier used as the Git path when cloning the code, e.g. master, tags/v2.3",
@@ -30,6 +34,7 @@ func deployAction(context *cli.Context) {
 
 	stream := hub.Stream{}
 	request := request.DeployRequest{
+		RepoUrl: context.String("repo"),
 		Pathspec: context.String("pathspec"),
 	}
 
