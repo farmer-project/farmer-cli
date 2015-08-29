@@ -44,16 +44,16 @@ func Get(name string) string {
 }
 
 func Reconfigure() {
+	fmt.Print("Farmer API Server URL: ")
+	fmt.Scanln(&farmerConfig.ServerUrl)
+	farmerConfig.ServerUrl = strings.TrimRight(farmerConfig.ServerUrl, "/")
+
 	fo, err := os.Create(configPath)
 	defer fo.Close()
 
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Print("Farmer API Server URL: ")
-	fmt.Scanln(&farmerConfig.ServerUrl)
-	farmerConfig.ServerUrl = strings.TrimRight(farmerConfig.ServerUrl, "/")
 
 	err = toml.NewEncoder(fo).Encode(&farmerConfig)
 	if err != nil {
