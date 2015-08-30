@@ -58,6 +58,7 @@ func (s *Stream) Consume() error {
 	go func() {
 		for d := range msgs {
 			if string(d.Body) == "kthxbai" {
+				os.Stdout.Write([]byte("\n"))
 				forever <- true
 				return
 			}
