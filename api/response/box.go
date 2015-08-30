@@ -12,7 +12,7 @@ type Box struct {
 	CgroupParent  string `json:"cgroupParent"`
 	CodeDirectory string `json:"code_directory"`
 
-	BuildNumber int `json:"build_number"`
+	RevisionNumber int `json:"revision"`
 
 	FarmerConfig
 	Domains []Domain `json:"domains"`

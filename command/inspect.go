@@ -8,6 +8,7 @@ import (
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
 	"github.com/olekukonko/tablewriter"
+	"strconv"
 )
 
 func InspectCmd() cli.Command {
@@ -42,6 +43,7 @@ func generateBoxTable(box *response.Box) {
 		box.RepoUrl,
 		box.Pathspec,
 		box.Image,
+		strconv.Itoa(box.RevisionNumber),
 		box.Home,
 		strings.Join(box.Ports, ","),
 		domainsToString(box.Domains),
@@ -54,6 +56,7 @@ func generateBoxTable(box *response.Box) {
 		"Repository",
 		"Pathspec",
 		"Image",
+		"RevisionNumber",
 		"Home",
 		"Ports",
 		"Domains",

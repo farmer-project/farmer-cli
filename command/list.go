@@ -7,6 +7,7 @@ import (
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
 	"github.com/olekukonko/tablewriter"
+	"strconv"
 )
 
 func ListCmd() cli.Command {
@@ -36,6 +37,7 @@ func generateBoxesTable(boxes []*response.Box) {
 			item.RepoUrl,
 			item.Pathspec,
 			item.Image,
+			strconv.Itoa(item.RevisionNumber),
 			item.State,
 		})
 	}
@@ -46,6 +48,7 @@ func generateBoxesTable(boxes []*response.Box) {
 		"Repository",
 		"Pathspec",
 		"Image",
+		"Revision",
 		"State",
 	})
 	table.SetBorder(true)
