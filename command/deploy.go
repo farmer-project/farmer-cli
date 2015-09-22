@@ -3,8 +3,8 @@ package command
 import (
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
-	"github.com/farmer-project/farmer-cli/hub"
 	"github.com/farmer-project/farmer-cli/api/request"
+	"github.com/farmer-project/farmer-cli/hub"
 )
 
 func DeployCmd() cli.Command {
@@ -34,7 +34,7 @@ func deployAction(context *cli.Context) {
 
 	stream := hub.Stream{}
 	request := request.DeployRequest{
-		RepoUrl: context.String("repo"),
+		RepoUrl:  context.String("repo"),
 		Pathspec: context.String("pathspec"),
 	}
 
