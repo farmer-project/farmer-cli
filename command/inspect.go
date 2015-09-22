@@ -7,6 +7,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
+	"strconv"
 )
 
 func InspectCmd() cli.Command {
@@ -39,7 +40,7 @@ func generateBoxTable(box *response.Box) {
 		box.Name,
 		box.State,
 		box.UpdateAt,
-		box.Revision,
+		strconv.Itoa(box.Revision),
 		box.RepoUrl,
 		box.Pathspec,
 		box.Home,

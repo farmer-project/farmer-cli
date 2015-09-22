@@ -9,7 +9,7 @@ type Box struct {
 	Home     string          `json:"home"`
 	Ports    []string        `json:"ports"`
 	Domains  []Domain `json:"domains"`
-	Revision string          `json:"revision"`
+	Revision int          `json:"revision"`
 	UpdateAt string          `json:"update_at"`
 }
 
