@@ -2,7 +2,7 @@ package command
 
 import (
 	"fmt"
-	"github.com/codegangsta/cli"
+	"gopkg.in/codegangsta/cli.v1"
 	"github.com/farmer-project/farmer-cli/api"
 )
 

@@ -2,9 +2,9 @@ package api
 
 import (
 	"errors"
-	"github.com/farmer-project/farmer-cli/config"
-	"github.com/jmcvetta/napping"
 	"net/http"
+	"gopkg.in/jmcvetta/napping.v1"
+	"github.com/farmer-project/farmer-cli/config"
 )
 
 func Get(path string, params *napping.Params, result interface{}) error {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/codegangsta/cli"
+	"gopkg.in/codegangsta/cli.v1"
 	"github.com/farmer-project/farmer-cli/command"
 	"os"
 )

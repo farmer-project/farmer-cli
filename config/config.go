@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-
 	"github.com/BurntSushi/toml"
 	"github.com/mitchellh/go-homedir"
 	"reflect"

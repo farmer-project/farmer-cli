@@ -2,7 +2,6 @@ package hub
 
 import (
 	"os"
-
 	"github.com/streadway/amqp"
 )
 

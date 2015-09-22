@@ -2,10 +2,8 @@ package command
 
 import (
 	"os"
-
-	"github.com/codegangsta/cli"
+	"gopkg.in/codegangsta/cli.v1"
 	"github.com/olekukonko/tablewriter"
-
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
 )
