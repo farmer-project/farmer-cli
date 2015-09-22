@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
+
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
-	"github.com/olekukonko/tablewriter"
-	"strconv"
 )
 
 func InspectCmd() cli.Command {
@@ -38,12 +38,12 @@ func inspectAction(context *cli.Context) {
 func generateBoxTable(box *response.Box) {
 	data := [][]string{}
 	data = append(data, []string{
-		box.State,
 		box.Name,
+		box.State,
+		box.UpdateAt,
+		box.Revision,
 		box.RepoUrl,
 		box.Pathspec,
-		box.Image,
-		strconv.Itoa(box.RevisionNumber),
 		box.Home,
 		strings.Join(box.Ports, ","),
 		domainsToString(box.Domains),
@@ -51,12 +51,12 @@ func generateBoxTable(box *response.Box) {
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
-		"State",
 		"Name",
+		"State",
+		"UpdateAt",
+		"Revision",
 		"Repository",
 		"Pathspec",
-		"Image",
-		"RevisionNumber",
 		"Home",
 		"Ports",
 		"Domains",

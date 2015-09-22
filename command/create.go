@@ -3,8 +3,8 @@ package command
 import (
 	"github.com/codegangsta/cli"
 	"github.com/farmer-project/farmer-cli/api"
-	"github.com/farmer-project/farmer-cli/hub"
 	"github.com/farmer-project/farmer-cli/api/request"
+	"github.com/farmer-project/farmer-cli/hub"
 )
 
 func CreateCmd() cli.Command {

@@ -4,10 +4,10 @@ import (
 	"os"
 
 	"github.com/codegangsta/cli"
+	"github.com/olekukonko/tablewriter"
+
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
-	"github.com/olekukonko/tablewriter"
-	"strconv"
 )
 
 func ListCmd() cli.Command {
@@ -34,22 +34,20 @@ func generateBoxesTable(boxes []*response.Box) {
 	for _, item := range boxes {
 		data = append(data, []string{
 			item.Name,
+			item.State,
 			item.RepoUrl,
 			item.Pathspec,
-			item.Image,
-			strconv.Itoa(item.RevisionNumber),
-			item.State,
+			item.UpdateAt,
 		})
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{
 		"Name",
+		"State",
 		"Repository",
 		"Pathspec",
-		"Image",
-		"Revision",
-		"State",
+		"Update At",
 	})
 	table.SetBorder(true)
 	table.AppendBulk(data)
