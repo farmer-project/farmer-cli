@@ -3,18 +3,27 @@ package command
 import (
 	"os"
 	"strings"
+	"strconv"
+	"encoding/json"
+
 	"gopkg.in/codegangsta/cli.v1"
 	"github.com/olekukonko/tablewriter"
+
 	"github.com/farmer-project/farmer-cli/api"
 	"github.com/farmer-project/farmer-cli/api/response"
-	"strconv"
 )
 
 func InspectCmd() cli.Command {
 	return cli.Command{
 		Name:        "inspect",
-		Usage:       "<boxname>",
+		Usage:       "<boxname> [--type=TYPE]",
 		Description: "Displays box's details such as repository Url, current branch specifier, state, etc.",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "type, t",
+				Usage: "Output type table or json(default=table).",
+			},
+		},
 		Action:      inspectAction,
 	}
 }
@@ -31,7 +40,12 @@ func inspectAction(context *cli.Context) {
 		return
 	}
 
-	generateBoxTable(box)
+	if context.String("type") == "json" {
+		json, _ := json.MarshalIndent(box, "", "    ")
+		println(string(json))
+	} else {
+		generateBoxTable(box)
+	}
 }
 
 func generateBoxTable(box *response.Box) {
